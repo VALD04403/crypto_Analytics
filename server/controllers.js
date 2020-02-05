@@ -5,4 +5,9 @@ const getPurchases = async (req, res) => {
   return res.status(200).json({ purchases });
 };
 
-module.exports = { getPurchases };
+const createPurchase = async (req, res) => {
+  const purchase = await dataAccess.createPurchase();
+  return status(201).json({ purchase });
+};
+
+module.exports = { getPurchases, createPurchase };

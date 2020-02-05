@@ -7,5 +7,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/purchases', controllers.getPurchases);
+router.post('/purchase', controllers.createPurchase);
 
 module.exports = router;
