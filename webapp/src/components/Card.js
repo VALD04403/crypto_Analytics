@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Card } from 'semantic-ui-react';
 
 function CardWallet() {
   return (
-    <div>
-      <Card fluid style={{ marginTop: '90px' }}>
+    <Fragment>
+      <Card fluid>
         <Card.Content>
           <Card.Header>Solde du portefeuille</Card.Header>
+        </Card.Content>
+        <Card.Content>
           <Card.Meta>125.12€</Card.Meta>
         </Card.Content>
       </Card>
-    </div>
+    </Fragment>
   );
 }
 
-export { CardWallet };
+export default CardWallet;

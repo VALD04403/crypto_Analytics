@@ -1,7 +1,9 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
-import { CardWallet } from '../components/Card';
+import CardWallet from '../components/Card';
+import LastAction from '../components/LastActionCard';
+import FormAddAction from '../components/FormAddAction';
 import AppLayout from '../styles/AppLayout';
 
 function Dashboard() {
@@ -9,7 +11,11 @@ function Dashboard() {
     <div className="Dashboard">
       <AppLayout>
         <Navbar></Navbar>
-        <Route path="/dashboard" component={() => <CardWallet />} />
+        <div id="wrapper" style={{ marginTop: '90px' }}>
+          <Route path="/dashboard" component={() => <CardWallet />} />
+          <Route path="/dashboard" component={() => <LastAction />} />
+          <Route path="/wallet" component={() => <FormAddAction />} />
+        </div>
       </AppLayout>
     </div>
   );

@@ -36,3 +36,53 @@
     transform: rotate(360deg);
   }
 }
+
+.body {
+  background-color: rgb(255, 255, 255);
+}
+
+.ui.blue.menu .active.item {
+  border-color: #1652f0 !important;
+  color: #1652f0 !important;
+}
+
+.primary {
+  background-color: #1652f0 !important;
+  border-color: #1652f0 !important;
+}
+
+.active {
+  color: #1652f0 !important;
+}
+
+.ui.card {
+  box-shadow: none !important;
+  border-radius: 4px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: rgb(236, 239, 241) !important;
+  border-image: initial !important;
+}
+
+.ui.secondary.pointing.menu {
+  border-bottom: 1px solid rgb(236, 239, 241) !important;
+}
+
+.ui.form .field > label {
+  display: flex;
+  font-weight: 200;
+  color: rgba(70, 70, 70, 0.87);
+}
+
+input:active,
+input:focus,
+textarea:active,
+textarea:focus,
+select:active,
+select:focus,
+.ui.dropdown:active,
+.ui.dropdown:focus,
+.ui.dropdown.active,
+.ui .menu.visible {
+  border-color: #1652f0 !important;
+}
