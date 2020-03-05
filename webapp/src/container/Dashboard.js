@@ -4,6 +4,7 @@ import { Navbar } from '../components/Navbar';
 import CardWallet from '../components/Card';
 import LastAction from '../components/LastActionCard';
 import FormAddAction from '../components/FormAddAction';
+import Purchases from '../components/Purchases';
 import AppLayout from '../styles/AppLayout';
 
 function Dashboard() {
@@ -15,6 +16,7 @@ function Dashboard() {
           <Route path="/dashboard" component={() => <CardWallet />} />
           <Route path="/dashboard" component={() => <LastAction />} />
           <Route path="/wallet" component={() => <FormAddAction />} />
+          <Route path="/wallet" component={() => <Purchases />} />
         </div>
       </AppLayout>
     </div>

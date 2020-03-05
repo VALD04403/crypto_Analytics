@@ -6,8 +6,28 @@ const getPurchases = async (req, res) => {
 };
 
 const createPurchase = async (req, res) => {
-  const purchase = await dataAccess.createPurchase();
-  return status(201).json({ purchase });
+  try {
+    console.log(req.body);
+    const {
+      cryptoName,
+      date,
+      price,
+      amountEuro,
+      amountCrypto,
+      fees
+    } = req.body;
+    await dataAccess.createPurchase(
+      cryptoName,
+      date,
+      price,
+      amountEuro,
+      amountCrypto,
+      fees
+    );
+  } catch (error) {
+    return res.status(400).send({ errorMessage: error.message });
+  }
+  return res.sendStatus(201);
 };
 
 module.exports = { getPurchases, createPurchase };

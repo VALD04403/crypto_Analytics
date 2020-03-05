@@ -86,3 +86,12 @@ select:focus,
 .ui .menu.visible {
   border-color: #1652f0 !important;
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+#button-end-page {
+  margin-top: 1.5em;
+  width: 100%;
+}
