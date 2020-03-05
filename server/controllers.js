@@ -5,6 +5,12 @@ const getPurchases = async (req, res) => {
   return res.status(200).json({ purchases });
 };
 
+const getPurchasesByCoin = async (req, res) => {
+  const { coin } = req.body;
+  const purchases = await dataAccess.getPurchasesByCoin(coin);
+  return res.status(200).json({ purchases });
+};
+
 const createPurchase = async (req, res) => {
   try {
     console.log(req.body);
@@ -30,4 +36,4 @@ const createPurchase = async (req, res) => {
   return res.sendStatus(201);
 };
 
-module.exports = { getPurchases, createPurchase };
+module.exports = { getPurchases, getPurchasesByCoin, createPurchase };
