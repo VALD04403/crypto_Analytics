@@ -5,6 +5,15 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 
+import btc from '../assets/svg/btc.svg';
+import eth from '../assets/svg/eth.svg';
+import xtz from '../assets/svg/xtz.svg';
+import eos from '../assets/svg/eos.svg';
+import ltc from '../assets/svg/ltc.svg';
+import xrp from '../assets/svg/xrp.svg';
+import bch from '../assets/svg/bch.svg';
+import etc from '../assets/svg/etc.svg';
+
 function FormAddAction() {
   const [date, setDate] = useState(new Date());
   const [name, setName] = useState('');
@@ -41,6 +50,8 @@ function FormAddAction() {
       });
   };
 
+  // const cryptoList = ['btc', 'ltc', 'eth', 'etc', 'bch', 'xtz', 'xrp'];
+
   const cryptoOptions = [
     { key: '', value: '', text: 'Choisissez votre cryptomonnaie' },
     {
@@ -48,10 +59,7 @@ function FormAddAction() {
       value: 'btc',
       text: (
         <span>
-          <Image
-            style={{ width: '20px', marginRight: '10px' }}
-            src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
-          />{' '}
+          <Image style={{ width: '20px', marginRight: '10px' }} src={btc} />{' '}
           Bitcoin
         </span>
       )
@@ -61,10 +69,7 @@ function FormAddAction() {
       value: 'eth',
       text: (
         <span>
-          <Image
-            style={{ width: '20px', marginRight: '10px' }}
-            src="https://dynamic-assets.coinbase.com/7796fb1bd5752a156c77e0b1fa28fb17e93d03b4b8e2dcff58dcaf8f99b2e4a3c3af2cd905d5536761c54ac273d62d91a38ef8e5702fa988c37264e7aba36b3b/asset_icons/3af4b33bde3012fd29dd1366b0ad737660f24acc91750ee30a034a0679256d0b.png"
-          />{' '}
+          <Image style={{ width: '20px', marginRight: '10px' }} src={eth} />{' '}
           Ethereum
         </span>
       )
@@ -74,10 +79,7 @@ function FormAddAction() {
       value: 'ltc',
       text: (
         <span>
-          <Image
-            style={{ width: '20px', marginRight: '10px' }}
-            src="https://dynamic-assets.coinbase.com/f018870b721574ef7f269b9fd91b36042dc05ebed4ae9dcdc340a1bae5b359e8760a8c224bc99466db704d10a3e23cf1f4cd1ff6f647340c4c9c899a9e6595cd/asset_icons/984a4fe2ba5b2c325c06e4c2f3ba3f1c1fef1f157edb3b8ebbfe234340a157a5.png"
-          />{' '}
+          <Image style={{ width: '20px', marginRight: '10px' }} src={ltc} />{' '}
           Litecoin
         </span>
       )
@@ -87,11 +89,46 @@ function FormAddAction() {
       value: 'xtz',
       text: (
         <span>
-          <Image
-            style={{ width: '20px', marginRight: '10px' }}
-            src="https://dynamic-assets.coinbase.com/196aae0d1ec13906a21975544fac79eb2752e379a149a1e5c6b7ffe6159986f474c67f929afe61541df773d97d883e638911f125753fd8974d91eca8c1657aff/asset_icons/e294b1cf6ec96713bf6a15e72b13313e446489d7709cda328f825679370b46b9.png"
-          />{' '}
+          <Image style={{ width: '20px', marginRight: '10px' }} src={xtz} />{' '}
           Tezos
+        </span>
+      )
+    },
+    {
+      key: 'xrp',
+      value: 'xrp',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={xrp} /> XRP
+        </span>
+      )
+    },
+    {
+      key: 'eos',
+      value: 'eos',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={eos} /> EOS
+        </span>
+      )
+    },
+    {
+      key: 'bch',
+      value: 'bch',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={bch} />{' '}
+          Bitcoin Cash
+        </span>
+      )
+    },
+    {
+      key: 'etc',
+      value: 'etc',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={etc} />{' '}
+          Ethereum Classic
         </span>
       )
     }

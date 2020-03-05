@@ -13,7 +13,6 @@ const getPurchasesByCoin = async (req, res) => {
 
 const createPurchase = async (req, res) => {
   try {
-    console.log(req.body);
     const {
       cryptoName,
       date,
