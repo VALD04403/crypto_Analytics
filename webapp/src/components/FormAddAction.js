@@ -13,6 +13,7 @@ import ltc from '../assets/svg/ltc.svg';
 import xrp from '../assets/svg/xrp.svg';
 import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
+import knc from '../assets/svg/knc.svg';
 
 function FormAddAction() {
   const [date, setDate] = useState(new Date());
@@ -28,7 +29,13 @@ function FormAddAction() {
     event.preventDefault();
     const form = new FormData(event.target);
     const cryptoName = name;
-    const date = form.get('date');
+    const formDate = form.get('date');
+    const date =
+      formDate.slice(3, 5) +
+      '-' +
+      formDate.slice(0, 2) +
+      '-' +
+      formDate.slice(6, 10);
     const price = form.get('price');
     const amountEuro = form.get('amountEuro');
     const amountCrypto = form.get('amountCrypto');
@@ -49,8 +56,6 @@ function FormAddAction() {
         console.log(error);
       });
   };
-
-  // const cryptoList = ['btc', 'ltc', 'eth', 'etc', 'bch', 'xtz', 'xrp'];
 
   const cryptoOptions = [
     { key: '', value: '', text: 'Choisissez votre cryptomonnaie' },
@@ -129,6 +134,16 @@ function FormAddAction() {
         <span>
           <Image style={{ width: '20px', marginRight: '10px' }} src={etc} />{' '}
           Ethereum Classic
+        </span>
+      )
+    },
+    {
+      key: 'knc',
+      value: 'knc',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={knc} />{' '}
+          Kyber Network
         </span>
       )
     }

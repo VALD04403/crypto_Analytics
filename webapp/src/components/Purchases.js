@@ -11,6 +11,7 @@ import ltc from '../assets/svg/ltc.svg';
 import xrp from '../assets/svg/xrp.svg';
 import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
+import knc from '../assets/svg/knc.svg';
 
 function Purchases() {
   const [items, setItems] = useState();
@@ -69,6 +70,10 @@ function Purchases() {
                       ? xrp
                       : category.name === 'eos'
                       ? eos
+                      : category.name === 'knc'
+                      ? knc
+                      : category.name === 'bch'
+                      ? bch
                       : ''
                   }
                 ></Image>
@@ -98,7 +103,7 @@ function Purchases() {
                       <Table.Cell>{item.purchase_fees}€</Table.Cell>
                       <Table.Cell>
                         <Moment
-                          format="MM/DD/YYYY"
+                          format="DD/MM/YYYY"
                           date={new Date(item.purchase_date)}
                         />
                       </Table.Cell>

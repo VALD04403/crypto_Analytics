@@ -35,4 +35,15 @@ const createPurchase = async (req, res) => {
   return res.sendStatus(201);
 };
 
-module.exports = { getPurchases, getPurchasesByCoin, createPurchase };
+const deletePurchase = async (req, res) => {
+  const { id } = req.body;
+  const response = await dataAccess.deletePurchase(id);
+  return res.status(200).json({ response });
+};
+
+module.exports = {
+  getPurchases,
+  getPurchasesByCoin,
+  createPurchase,
+  deletePurchase
+};

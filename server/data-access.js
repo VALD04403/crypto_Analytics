@@ -28,8 +28,16 @@ const createPurchase = async (coin, date, price, mount, amount, fees) => {
   return purchase.rows;
 };
 
+const deletePurchase = async id => {
+  const purchase = await pool.query(
+    `DELETE FROM purchase WHERE purchase_id=${id}`
+  );
+  return purchase;
+};
+
 module.exports = {
   getPurchases,
   createPurchase,
-  getPurchasesByCoin
+  getPurchasesByCoin,
+  deletePurchase
 };
