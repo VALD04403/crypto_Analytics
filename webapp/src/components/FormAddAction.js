@@ -14,6 +14,7 @@ import xrp from '../assets/svg/xrp.svg';
 import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
+import xlm from '../assets/svg/xlm.svg';
 
 function FormAddAction() {
   const [date, setDate] = useState(new Date());
@@ -144,6 +145,16 @@ function FormAddAction() {
         <span>
           <Image style={{ width: '20px', marginRight: '10px' }} src={knc} />{' '}
           Kyber Network
+        </span>
+      )
+    },
+    {
+      key: 'xlm',
+      value: 'xlm',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={xlm} />{' '}
+          Stellar Lumens
         </span>
       )
     }

@@ -12,6 +12,7 @@ import xrp from '../assets/svg/xrp.svg';
 import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
+import xlm from '../assets/svg/xlm.svg';
 
 function Purchases() {
   const [items, setItems] = useState();
@@ -74,6 +75,8 @@ function Purchases() {
                       ? knc
                       : category.name === 'bch'
                       ? bch
+                      : category.name === 'xlm'
+                      ? xlm
                       : ''
                   }
                 ></Image>
