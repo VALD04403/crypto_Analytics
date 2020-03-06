@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Card, Form, Input, Select, Image } from 'semantic-ui-react';
 import { ButtonPrimary } from '../styles/Button';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import { toast } from 'react-toastify';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 import btc from '../assets/svg/btc.svg';
 import eth from '../assets/svg/eth.svg';
@@ -17,17 +19,25 @@ import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
 
 function FormAddAction() {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState();
   const [name, setName] = useState('');
+  const [amountCrypto, setAmountCrypto] = useState('');
+  const [amountEuro, setAmountEuro] = useState('');
+  const [price, setPrice] = useState('');
+  const [fees, setFees] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChange = date => {
-    setDate(date);
-  };
-
+  const handleChangeAmountCrypto = data => setAmountCrypto(data);
+  const handleChangeAmountEuro = data => setAmountEuro(data);
+  const handleChangePrice = data => setPrice(data);
+  const handleChangeFees = data => setFees(data);
+  const handleChangeDate = date => setDate(date);
   const handleChangeName = (e, { value }) => setName(value);
 
+  const Greet = () => <div>Achat ajouté !</div>;
   const submit = async event => {
     event.preventDefault();
+    setIsSubmitted(true);
     const form = new FormData(event.target);
     const cryptoName = name;
     const formDate = form.get('date');
@@ -41,21 +51,29 @@ function FormAddAction() {
     const amountEuro = form.get('amountEuro');
     const amountCrypto = form.get('amountCrypto');
     const fees = form.get('fees');
-    axios
-      .post('/api/purchase', {
-        cryptoName,
-        date,
-        price,
-        amountEuro,
-        amountCrypto,
-        fees
-      })
-      .then(function(res) {
-        console.log(res);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+
+    if (cryptoName && price && date && amountCrypto && amountEuro && fees) {
+      axios
+        .post('/api/purchase', {
+          cryptoName,
+          date,
+          price,
+          amountEuro,
+          amountCrypto,
+          fees
+        })
+        .then(function(res) {
+          toast.success(<Greet />);
+          setIsSubmitted(false);
+          console.log(res);
+          document.getElementById('coin-form').reset();
+          setName(null);
+          setDate(null);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
   };
 
   const cryptoOptions = [
@@ -166,55 +184,62 @@ function FormAddAction() {
       </Card.Content>
       <Card.Content>
         <Card.Meta style={{ marginTop: '20px' }}>
-          <Form onSubmit={submit}>
-            <Form.Field>
+          <Form id="coin-form" onSubmit={submit}>
+            <Form.Field className={isSubmitted && !name ? 'error' : ''}>
               <label>Cryptomonnaie</label>
               <Select
                 name="cryptoName"
                 placeholder="Cryptomonnaie"
+                selected={name}
+                value={name}
                 options={cryptoOptions}
                 onChange={handleChangeName}
               />
             </Form.Field>
             <Form.Field
+              className={isSubmitted && !amountCrypto ? 'error' : ''}
+              onChange={handleChangeAmountCrypto}
               name="amountCrypto"
-              type="number"
               step="any"
               label="Montant crypto"
               control={Input}
-              placeholder="0.0002"
+              placeholder="Volume"
             ></Form.Field>
             <Form.Field
+              className={isSubmitted && !amountEuro ? 'error' : ''}
+              onChange={handleChangeAmountEuro}
               name="amountEuro"
-              type="number"
               step="any"
               label="Montant €"
               control={Input}
-              placeholder="10 €"
+              placeholder="Montant €"
             ></Form.Field>
             <Form.Field
+              className={isSubmitted && !fees ? 'error' : ''}
+              onChange={handleChangeFees}
               name="fees"
-              type="number"
               step="any"
               label="Frais"
               control={Input}
-              placeholder="0,99 €"
+              placeholder="Frais €"
             ></Form.Field>
             <Form.Field
+              className={isSubmitted && !price ? 'error' : ''}
+              onChange={handleChangePrice}
               name="price"
-              type="number"
               step="any"
               label="Prix"
               control={Input}
-              placeholder="8123,23 €"
+              placeholder="Prix €"
             ></Form.Field>
-            <Form.Field>
+            <Form.Field className={isSubmitted && !date ? 'error' : ''}>
               <label>Date d'achat</label>
               <DatePicker
+                placeholderText="Date"
                 name="date"
                 dateFormat="dd/MM/yyyy"
                 selected={date}
-                onChange={handleChange}
+                onChange={handleChangeDate}
               />
             </Form.Field>
             <ButtonPrimary id="button-end-page" type="submit">

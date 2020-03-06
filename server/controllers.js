@@ -41,9 +41,16 @@ const deletePurchase = async (req, res) => {
   return res.status(200).json({ response });
 };
 
+const getValueCoin = async (req, res) => {
+  const { coin } = req.body;
+  const response = await dataAccess.getValueCrypto(coin);
+  return res.status(200).json({ response });
+};
+
 module.exports = {
   getPurchases,
   getPurchasesByCoin,
   createPurchase,
-  deletePurchase
+  deletePurchase,
+  getValueCoin
 };

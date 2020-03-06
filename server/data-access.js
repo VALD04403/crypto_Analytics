@@ -1,6 +1,7 @@
 const pg = require('pg');
 
 const databaseUrl = process.env.DATABASE_URL;
+const apiKey = process.env.API_KEY_CRYPTO;
 
 const pool = new pg.Pool({
   connectionString: databaseUrl
@@ -35,9 +36,19 @@ const deletePurchase = async id => {
   return purchase;
 };
 
+const getValueCrypto = async coin => {
+  console.log(coin);
+  const value = await pool.query(
+    `https://min-api.cryptocompare.com/data/price?fsym=$1&tsyms=EUR&api_key=${apiKey} VALUES($1)`,
+    [coin]
+  );
+  return value.EUR;
+};
+
 module.exports = {
   getPurchases,
   createPurchase,
   getPurchasesByCoin,
-  deletePurchase
+  deletePurchase,
+  getValueCrypto
 };

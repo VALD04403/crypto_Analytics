@@ -20,6 +20,7 @@ function Purchases() {
   const listItems = [];
 
   const getPurchases = async () => {
+    getValueOfCoin('BTC');
     const response = await axios.get('/api/purchases');
     response.data.purchases.map(item => {
       if (listItems.indexOf(item.coin_name) === -1) {
@@ -37,6 +38,11 @@ function Purchases() {
       });
     });
     setItems(orderItems);
+  };
+
+  const getValueOfCoin = async coin => {
+    const response = await axios.get('/api/value', { coin });
+    console.log(response);
   };
 
   const Capitalize = str => {
@@ -84,7 +90,7 @@ function Purchases() {
               </Header>
             </Card.Content>
             <Card.Content>
-              <Table basic="very" celled>
+              <Table basic="very" celled striped>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Volume</Table.HeaderCell>

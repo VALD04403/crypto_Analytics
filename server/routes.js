@@ -10,5 +10,6 @@ router.get('/purchases', controllers.getPurchases);
 router.get('/purchasesByCoin', controllers.getPurchasesByCoin);
 router.post('/purchase', controllers.createPurchase);
 router.delete('/purchase', controllers.deletePurchase);
+router.get('/value', controllers.getValueCoin);
 
 module.exports = router;
