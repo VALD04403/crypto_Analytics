@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const pg = require('pg');
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -37,11 +38,8 @@ const deletePurchase = async id => {
 };
 
 const getValueCrypto = async coin => {
-  console.log(coin);
-  const value = await pool.query(
-    `https://min-api.cryptocompare.com/data/price?fsym=$1&tsyms=EUR&api_key=${apiKey} VALUES($1)`,
-    [coin]
-  );
+  const url = `http://min-api.cryptocompare.com/data/price?fsym=${coin}&tsyms=EUR&api_key=${apiKey} VALUES($1)`;
+  const value = await (await fetch(url)).json();
   return value.EUR;
 };
 

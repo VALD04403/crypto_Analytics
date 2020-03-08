@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Card, Header, Image, Table } from 'semantic-ui-react';
 import Moment from 'react-moment';
 
@@ -14,35 +13,45 @@ import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
 
-function Purchases() {
-  const [items, setItems] = useState();
-  const orderItems = [];
-  const listItems = [];
+function Purchases(props) {
+  const [value, setValue] = useState();
+  const [total, setTotal] = useState();
+  const [totalAmount, setTotalAmount] = useState();
+  const [totalValue, setTotalValue] = useState();
+  const [percent, setPercent] = useState();
 
-  const getPurchases = async () => {
-    getValueOfCoin('BTC');
-    const response = await axios.get('/api/purchases');
-    response.data.purchases.map(item => {
-      if (listItems.indexOf(item.coin_name) === -1) {
-        const coin = {
-          name: item.coin_name,
-          purchases: []
-        };
-        orderItems.push(coin);
-        listItems.push(item.coin_name);
-      }
-      orderItems.map(purchase => {
-        if (purchase.name === item.coin_name) {
-          purchase.purchases.push(item);
-        }
-      });
+  const getInfos = async (coin, purchases) => {
+    //valeur crypto
+    let coinValue;
+    const response = await fetch(`/api/value/${coin}`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET'
     });
-    setItems(orderItems);
-  };
+    await response.json().then(res => {
+      coinValue = res.response;
+      setValue(res.response);
+    });
 
-  const getValueOfCoin = async coin => {
-    const response = await axios.get('/api/value', { coin });
-    console.log(response);
+    //total crypto
+    const sumCoin = await purchases.reduce(function(res, item) {
+      return res + parseFloat(item.amount_coin);
+    }, 0);
+    setTotalAmount(sumCoin);
+
+    //euro dépensé
+    const sumEuro = await purchases.reduce(function(res, item) {
+      return res + parseFloat(item.purchase_mount);
+    }, 0);
+    setTotal(Math.round(sumEuro * 100) / 100);
+
+    //valeur total
+    const valueOfWallet = sumCoin * coinValue;
+    setTotalValue(Math.round(valueOfWallet * 100) / 100);
+
+    //pourcentage plus-value/moins-value
+    const difference = valueOfWallet - sumEuro;
+    const percentValue = (difference / sumEuro) * 100;
+    setPercent(Math.round(percentValue * 100) / 100);
   };
 
   const Capitalize = str => {
@@ -50,79 +59,87 @@ function Purchases() {
   };
 
   useEffect(() => {
-    getPurchases();
+    getInfos(props.category.name, props.category.purchases);
   }, []);
 
   return (
     <div>
-      {items &&
-        items.map(category => (
-          <Card key={category.name} fluid>
-            <Card.Content>
-              <Header as="h2" floated="left">
-                <Image
-                  style={{ width: '40px', height: '40px', marginRight: '10px' }}
-                  src={
-                    category.name === 'btc'
-                      ? btc
-                      : category.name === 'eth'
-                      ? eth
-                      : category.name === 'etc'
-                      ? etc
-                      : category.name === 'xtz'
-                      ? xtz
-                      : category.name === 'ltc'
-                      ? ltc
-                      : category.name === 'xrp'
-                      ? xrp
-                      : category.name === 'eos'
-                      ? eos
-                      : category.name === 'knc'
-                      ? knc
-                      : category.name === 'bch'
-                      ? bch
-                      : category.name === 'xlm'
-                      ? xlm
-                      : ''
-                  }
-                ></Image>
-                {Capitalize(category.name)}
-              </Header>
-            </Card.Content>
-            <Card.Content>
-              <Table basic="very" celled striped>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Volume</Table.HeaderCell>
-                    <Table.HeaderCell>Montant €</Table.HeaderCell>
-                    <Table.HeaderCell>Prix</Table.HeaderCell>
-                    <Table.HeaderCell>Frais</Table.HeaderCell>
-                    <Table.HeaderCell>Date</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {category.purchases.map(item => (
-                    <Table.Row key={item.purchase_id}>
-                      <Table.Cell>
-                        {item.amount_coin}
-                        {Capitalize(item.coin_name)}
-                      </Table.Cell>
-                      <Table.Cell>{item.purchase_mount}€</Table.Cell>
-                      <Table.Cell>{item.purchase_price}€</Table.Cell>
-                      <Table.Cell>{item.purchase_fees}€</Table.Cell>
-                      <Table.Cell>
-                        <Moment
-                          format="DD/MM/YYYY"
-                          date={new Date(item.purchase_date)}
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
-            </Card.Content>
-          </Card>
-        ))}
+      <Card key={props.category.name} fluid>
+        <Card.Content>
+          <Header as="h2" floated="left">
+            <Image
+              style={{ width: '40px', height: '40px', marginRight: '10px' }}
+              src={
+                props.category.name === 'btc'
+                  ? btc
+                  : props.category.name === 'eth'
+                  ? eth
+                  : props.category.name === 'etc'
+                  ? etc
+                  : props.category.name === 'xtz'
+                  ? xtz
+                  : props.category.name === 'ltc'
+                  ? ltc
+                  : props.category.name === 'xrp'
+                  ? xrp
+                  : props.category.name === 'eos'
+                  ? eos
+                  : props.category.name === 'knc'
+                  ? knc
+                  : props.category.name === 'bch'
+                  ? bch
+                  : props.category.name === 'xlm'
+                  ? xlm
+                  : ''
+              }
+            ></Image>
+            {Capitalize(props.category.name)}
+            <span style={{ marginLeft: '40px' }}> {value} €</span>
+          </Header>
+        </Card.Content>
+        <Card.Content style={{ textAlign: 'left' }}>
+          <p>
+            Total achété: {total} € / {totalAmount}{' '}
+            {Capitalize(props.category.name)}
+          </p>
+          <p>Valeur actuelle: {totalValue} €</p>
+          <Header as="h4" color={percent > 0 ? 'green' : 'red'}>
+            {percent > 0 ? 'Plus-value:' : ' Moins-value:'} {percent} %
+          </Header>
+        </Card.Content>
+        <Card.Content>
+          <Table basic="very" celled striped>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Volume</Table.HeaderCell>
+                <Table.HeaderCell>Montant €</Table.HeaderCell>
+                <Table.HeaderCell>Prix</Table.HeaderCell>
+                <Table.HeaderCell>Frais</Table.HeaderCell>
+                <Table.HeaderCell>Date</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {props.category.purchases.map(item => (
+                <Table.Row key={item.purchase_id}>
+                  <Table.Cell>
+                    {item.amount_coin}
+                    {Capitalize(item.coin_name)}
+                  </Table.Cell>
+                  <Table.Cell>{item.purchase_mount}€</Table.Cell>
+                  <Table.Cell>{item.purchase_price}€</Table.Cell>
+                  <Table.Cell>{item.purchase_fees}€</Table.Cell>
+                  <Table.Cell>
+                    <Moment
+                      format="DD/MM/YYYY"
+                      date={new Date(item.purchase_date)}
+                    />
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </Card.Content>
+      </Card>
     </div>
   );
 }

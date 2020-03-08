@@ -42,7 +42,7 @@ const deletePurchase = async (req, res) => {
 };
 
 const getValueCoin = async (req, res) => {
-  const { coin } = req.body;
+  const { coin } = req.params;
   const response = await dataAccess.getValueCrypto(coin);
   return res.status(200).json({ response });
 };
