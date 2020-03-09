@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Header, Image, Table } from 'semantic-ui-react';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Card, Header, Image, Table, Dimmer, Loader } from 'semantic-ui-react';
 import Moment from 'react-moment';
 
 import btc from '../assets/svg/btc.svg';
@@ -65,48 +65,56 @@ function Purchases(props) {
   return (
     <div>
       <Card key={props.category.name} fluid>
-        <Card.Content>
-          <Header as="h2" floated="left">
-            <Image
-              style={{ width: '40px', height: '40px', marginRight: '10px' }}
-              src={
-                props.category.name === 'btc'
-                  ? btc
-                  : props.category.name === 'eth'
-                  ? eth
-                  : props.category.name === 'etc'
-                  ? etc
-                  : props.category.name === 'xtz'
-                  ? xtz
-                  : props.category.name === 'ltc'
-                  ? ltc
-                  : props.category.name === 'xrp'
-                  ? xrp
-                  : props.category.name === 'eos'
-                  ? eos
-                  : props.category.name === 'knc'
-                  ? knc
-                  : props.category.name === 'bch'
-                  ? bch
-                  : props.category.name === 'xlm'
-                  ? xlm
-                  : ''
-              }
-            ></Image>
-            {Capitalize(props.category.name)}
-            <span style={{ marginLeft: '40px' }}> {value} €</span>
-          </Header>
-        </Card.Content>
-        <Card.Content style={{ textAlign: 'left' }}>
-          <p>
-            Total achété: {total} € / {totalAmount}{' '}
-            {Capitalize(props.category.name)}
-          </p>
-          <p>Valeur actuelle: {totalValue} €</p>
-          <Header as="h4" color={percent > 0 ? 'green' : 'red'}>
-            {percent > 0 ? 'Plus-value:' : ' Moins-value:'} {percent} %
-          </Header>
-        </Card.Content>
+        {value ? (
+          <Fragment>
+            <Card.Content>
+              <Header as="h2" floated="left">
+                <Image
+                  style={{ width: '40px', height: '40px', marginRight: '10px' }}
+                  src={
+                    props.category.name === 'btc'
+                      ? btc
+                      : props.category.name === 'eth'
+                      ? eth
+                      : props.category.name === 'etc'
+                      ? etc
+                      : props.category.name === 'xtz'
+                      ? xtz
+                      : props.category.name === 'ltc'
+                      ? ltc
+                      : props.category.name === 'xrp'
+                      ? xrp
+                      : props.category.name === 'eos'
+                      ? eos
+                      : props.category.name === 'knc'
+                      ? knc
+                      : props.category.name === 'bch'
+                      ? bch
+                      : props.category.name === 'xlm'
+                      ? xlm
+                      : ''
+                  }
+                ></Image>
+                {Capitalize(props.category.name)}
+                <span style={{ marginLeft: '40px' }}> {value} €</span>
+              </Header>
+            </Card.Content>
+            <Card.Content style={{ textAlign: 'left' }}>
+              <Header as="h4">
+                Total achété: {total} € / {totalAmount}{' '}
+                {Capitalize(props.category.name)}
+              </Header>
+              <Header as="h3">Valeur actuelle: {totalValue} €</Header>
+              <Header as="h4" color={percent > 0 ? 'green' : 'red'}>
+                {percent > 0 ? 'Plus-value:' : ' Moins-value:'} {percent} %
+              </Header>
+            </Card.Content>
+          </Fragment>
+        ) : (
+          <Dimmer active>
+            <Loader />
+          </Dimmer>
+        )}
         <Card.Content>
           <Table basic="very" celled striped>
             <Table.Header>

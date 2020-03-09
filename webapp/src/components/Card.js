@@ -1,7 +1,20 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Card } from 'semantic-ui-react';
 
 function CardWallet() {
+  const [walletValue, setWalletValue] = useState();
+
+  const getTotalWallet = async () => {
+    const response = await fetch('/api/totalWallet').then(res =>
+      console.log(res)
+    );
+    setWalletValue(response);
+  };
+
+  useEffect(() => {
+    getTotalWallet();
+  }, []);
+
   return (
     <Fragment>
       <Card fluid>
