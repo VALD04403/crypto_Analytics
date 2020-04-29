@@ -13,5 +13,6 @@ router.delete('/purchase', controllers.deletePurchase);
 router.get('/totalWallet', controllers.getTotalValueWallet);
 router.get('/value/:coin', controllers.getValueCoin);
 router.get('/info', controllers.getGeneralInfo);
+router.get('/top5', controllers.getLast5Purchase);
 
 module.exports = router;

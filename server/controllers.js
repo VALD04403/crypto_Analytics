@@ -106,6 +106,11 @@ const getGeneralInfo = async (req, res) => {
   return res.status(200).json({ data });
 };
 
+const getLast5Purchase = async (req, res) => {
+  const top5 = await dataAccess.getLast5Purchase();
+  return res.status(200).json({ top5 });
+};
+
 module.exports = {
   getPurchases,
   getPurchasesByCoin,
@@ -114,4 +119,5 @@ module.exports = {
   getValueCoin,
   getTotalValueWallet,
   getGeneralInfo,
+  getLast5Purchase,
 };

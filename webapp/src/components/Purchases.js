@@ -25,21 +25,21 @@ function Purchases(props) {
     let coinValue;
     const response = await fetch(`/api/value/${coin}`, {
       headers: { 'Content-Type': 'application/json' },
-      method: 'GET'
+      method: 'GET',
     });
-    await response.json().then(res => {
+    await response.json().then((res) => {
       coinValue = res.response;
       setValue(res.response);
     });
 
     //total crypto
-    const sumCoin = await purchases.reduce(function(res, item) {
+    const sumCoin = await purchases.reduce(function (res, item) {
       return res + parseFloat(item.amount_coin);
     }, 0);
     setTotalAmount(sumCoin);
 
     //euro dépensé
-    const sumEuro = await purchases.reduce(function(res, item) {
+    const sumEuro = await purchases.reduce(function (res, item) {
       return res + parseFloat(item.purchase_mount);
     }, 0);
     setTotal(Math.round(sumEuro * 100) / 100);
@@ -54,8 +54,8 @@ function Purchases(props) {
     setPercent(Math.round(percentValue * 100) / 100);
   };
 
-  const Capitalize = str => {
-    return str.toUpperCase();
+  const Capitalize = (str) => {
+    return ' ' + str.toUpperCase();
   };
 
   useEffect(() => {
@@ -127,7 +127,7 @@ function Purchases(props) {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {props.category.purchases.map(item => (
+              {props.category.purchases.map((item) => (
                 <Table.Row key={item.purchase_id}>
                   <Table.Cell>
                     {item.amount_coin}

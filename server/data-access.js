@@ -52,6 +52,13 @@ const getGeneralInfo = async () => {
   return data.rows;
 };
 
+const getLast5Purchase = async () => {
+  const top5 = await pool.query(
+    ' SELECT coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees, purchase_id FROM purchase ORDER BY purchase_date DESC LIMIT 5 OFFSET 0;'
+  );
+  return top5.rows;
+};
+
 module.exports = {
   getPurchases,
   createPurchase,
@@ -59,4 +66,5 @@ module.exports = {
   deletePurchase,
   getValueCrypto,
   getGeneralInfo,
+  getLast5Purchase,
 };
