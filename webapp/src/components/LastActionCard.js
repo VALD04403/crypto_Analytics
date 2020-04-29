@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Card, Image, Table, Button } from 'semantic-ui-react';
 import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
 
 import btc from '../assets/svg/btc.svg';
 import eth from '../assets/svg/eth.svg';
@@ -105,7 +106,7 @@ function LastAction() {
           </Table>
         </Card.Content>
         <Card.Content extra>
-          <Button basic color="blue">
+          <Button as={Link} to="/wallet" basic color="blue">
             Voir plus
           </Button>
         </Card.Content>
