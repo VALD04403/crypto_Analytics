@@ -13,11 +13,13 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 function Dashboard() {
   const [items, setItems] = useState();
+  const [path, setPath] = useState();
   const orderItems = [];
   const listItems = [];
   let location = useLocation();
 
   useEffect(() => {
+    setPath(location.pathname);
     if (location.pathname === '/wallet') {
       getPurchases();
     }
@@ -29,16 +31,16 @@ function Dashboard() {
 
   const getPurchases = async () => {
     const response = await axios.get('/api/purchases');
-    response.data.purchases.map(item => {
+    response.data.purchases.map((item) => {
       if (listItems.indexOf(item.coin_name) === -1) {
         const coin = {
           name: item.coin_name,
-          purchases: []
+          purchases: [],
         };
         orderItems.push(coin);
         listItems.push(item.coin_name);
       }
-      orderItems.map(purchase => {
+      orderItems.map((purchase) => {
         if (purchase.name === item.coin_name) {
           purchase.purchases.push(item);
         }
@@ -62,7 +64,7 @@ function Dashboard() {
             component={() => (
               <div>
                 {items &&
-                  items.map(category => (
+                  items.map((category) => (
                     <Purchases key={category.name} category={category} />
                   ))}
               </div>

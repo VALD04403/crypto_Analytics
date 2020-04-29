@@ -5,7 +5,7 @@ const databaseUrl = process.env.DATABASE_URL;
 const apiKey = process.env.API_KEY_CRYPTO;
 
 const pool = new pg.Pool({
-  connectionString: databaseUrl
+  connectionString: databaseUrl,
 });
 
 const getPurchases = async () => {
@@ -15,9 +15,10 @@ const getPurchases = async () => {
   return purchases.rows;
 };
 
-const getPurchasesByCoin = async coin => {
+const getPurchasesByCoin = async (coin) => {
   const purchases = await pool.query(
-    `SELECT * FROM purchase WHERE coin_name = ${coin} order by purchase_date DESC `
+    'SELECT * FROM purchase WHERE coin_name = $1 order by purchase_date DESC',
+    [coin]
   );
   return purchases.rows;
 };
@@ -30,17 +31,25 @@ const createPurchase = async (coin, date, price, mount, amount, fees) => {
   return purchase.rows;
 };
 
-const deletePurchase = async id => {
+const deletePurchase = async (id) => {
   const purchase = await pool.query(
-    `DELETE FROM purchase WHERE purchase_id=${id}`
+    'DELETE FROM purchase WHERE purchase_id=$1',
+    [id]
   );
   return purchase;
 };
 
-const getValueCrypto = async coin => {
-  const url = `http://min-api.cryptocompare.com/data/price?fsym=${coin}&tsyms=EUR&api_key=${apiKey} VALUES($1)`;
+const getValueCrypto = async (coin) => {
+  const url = `http://min-api.cryptocompare.com/data/price?fsym=${coin}&tsyms=EUR&api_key=${apiKey}`;
   const value = await (await fetch(url)).json();
   return value.EUR;
+};
+
+const getGeneralInfo = async () => {
+  const data = await pool.query(
+    'SELECT total_invest, total_fees, total_with_fees FROM general_info'
+  );
+  return data.rows;
 };
 
 module.exports = {
@@ -48,5 +57,6 @@ module.exports = {
   createPurchase,
   getPurchasesByCoin,
   deletePurchase,
-  getValueCrypto
+  getValueCrypto,
+  getGeneralInfo,
 };
