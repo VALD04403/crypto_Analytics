@@ -27,15 +27,15 @@ function FormAddAction() {
   const [fees, setFees] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChangeAmountCrypto = data => setAmountCrypto(data);
-  const handleChangeAmountEuro = data => setAmountEuro(data);
-  const handleChangePrice = data => setPrice(data);
-  const handleChangeFees = data => setFees(data);
-  const handleChangeDate = date => setDate(date);
+  const handleChangeAmountCrypto = (data) => setAmountCrypto(data);
+  const handleChangeAmountEuro = (data) => setAmountEuro(data);
+  const handleChangePrice = (data) => setPrice(data);
+  const handleChangeFees = (data) => setFees(data);
+  const handleChangeDate = (date) => setDate(date);
   const handleChangeName = (e, { value }) => setName(value);
 
   const Greet = () => <div>Achat ajouté !</div>;
-  const submit = async event => {
+  const submit = async (event) => {
     event.preventDefault();
     setIsSubmitted(true);
     const form = new FormData(event.target);
@@ -60,17 +60,16 @@ function FormAddAction() {
           price,
           amountEuro,
           amountCrypto,
-          fees
+          fees,
         })
-        .then(function(res) {
+        .then(function (res) {
           toast.success(<Greet />);
           setIsSubmitted(false);
-          console.log(res);
           document.getElementById('coin-form').reset();
           setName(null);
           setDate(null);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     }
@@ -86,7 +85,7 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={btc} />{' '}
           Bitcoin
         </span>
-      )
+      ),
     },
     {
       key: 'eth',
@@ -96,7 +95,7 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={eth} />{' '}
           Ethereum
         </span>
-      )
+      ),
     },
     {
       key: 'ltc',
@@ -106,7 +105,7 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={ltc} />{' '}
           Litecoin
         </span>
-      )
+      ),
     },
     {
       key: 'xtz',
@@ -116,7 +115,7 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={xtz} />{' '}
           Tezos
         </span>
-      )
+      ),
     },
     {
       key: 'xrp',
@@ -125,7 +124,7 @@ function FormAddAction() {
         <span>
           <Image style={{ width: '20px', marginRight: '10px' }} src={xrp} /> XRP
         </span>
-      )
+      ),
     },
     {
       key: 'eos',
@@ -134,7 +133,7 @@ function FormAddAction() {
         <span>
           <Image style={{ width: '20px', marginRight: '10px' }} src={eos} /> EOS
         </span>
-      )
+      ),
     },
     {
       key: 'bch',
@@ -144,7 +143,7 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={bch} />{' '}
           Bitcoin Cash
         </span>
-      )
+      ),
     },
     {
       key: 'etc',
@@ -154,7 +153,7 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={etc} />{' '}
           Ethereum Classic
         </span>
-      )
+      ),
     },
     {
       key: 'knc',
@@ -164,7 +163,7 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={knc} />{' '}
           Kyber Network
         </span>
-      )
+      ),
     },
     {
       key: 'xlm',
@@ -174,8 +173,8 @@ function FormAddAction() {
           <Image style={{ width: '20px', marginRight: '10px' }} src={xlm} />{' '}
           Stellar Lumens
         </span>
-      )
-    }
+      ),
+    },
   ];
   return (
     <Card>

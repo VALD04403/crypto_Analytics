@@ -13,6 +13,7 @@ const getPurchasesByCoin = async (req, res) => {
 
 const createPurchase = async (req, res) => {
   try {
+    const data = await dataAccess.getGeneralInfo();
     const {
       cryptoName,
       date,
@@ -29,6 +30,9 @@ const createPurchase = async (req, res) => {
       amountCrypto,
       fees
     );
+    const updateTotal = data[0].total_invest + amountEuro;
+    const updateFees = data[0].total_fees + fees;
+    await dataAccess.updateGeneralInfo(updateTotal, updateFees);
   } catch (error) {
     return res.status(400).send({ errorMessage: error.message });
   }
@@ -41,66 +45,6 @@ const deletePurchase = async (req, res) => {
   return res.status(200).json({ response });
 };
 
-const getValueCoin = async (req, res) => {
-  const { coin } = req.params;
-  const response = await dataAccess.getValueCrypto(coin);
-  return res.status(200).json({ response });
-};
-
-const getTotalValueWallet = async (req, res) => {
-  const orderItems = [];
-  const listItems = [];
-
-  const totalAmountByCoin = [];
-  const valueOfCoins = [];
-
-  const total = [];
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
-  const purchases = await dataAccess.getPurchases();
-  purchases.map((item) => {
-    if (listItems.indexOf(item.coin_name) === -1) {
-      const coin = {
-        name: item.coin_name,
-        purchases: [],
-      };
-      orderItems.push(coin);
-      listItems.push(item.coin_name);
-    }
-    orderItems.map((purchase) => {
-      if (purchase.name === item.coin_name) {
-        purchase.purchases.push(item);
-      }
-    });
-  });
-
-  orderItems.map((item) => {
-    const amount = item.purchases.reduce(function (res, item) {
-      return res + parseFloat(item.amount_coin);
-    }, 0);
-    totalAmountByCoin.push({ name: item.name, amount: amount });
-  });
-
-  getValueOfCoins(listItems);
-
-  // for (let i = 0; i < totalAmountByCoin.length; i++) {
-  //   let value = (await totalAmountByCoin[i]) * (await valueOfCoins[i]);
-  //   console.log(value);
-  // }
-  // return total.reduce(reducer);
-  return res.status(200).json({ valueOfCoins });
-};
-
-const getValueOfCoins = async (list) => {
-  const valueOfCoins = [];
-  list.map(async (coin) => {
-    const value = await dataAccess.getValueCrypto(coin);
-    valueOfCoins.push({ name: coin, price: value });
-  });
-  console.log(valueOfCoins);
-  return valueOfCoins;
-};
-
 const getGeneralInfo = async (req, res) => {
   const data = await dataAccess.getGeneralInfo();
   return res.status(200).json({ data });
@@ -111,13 +55,24 @@ const getLast5Purchase = async (req, res) => {
   return res.status(200).json({ top5 });
 };
 
+const getValueCoin = async (req, res) => {
+  const { coin } = req.params;
+  const response = await dataAccess.getValueCrypto(coin);
+  return res.status(200).json({ response });
+};
+
+const getTopListValue = async (req, res) => {
+  const response = await dataAccess.getTopList();
+  return res.status(200).json({ response });
+};
+
 module.exports = {
   getPurchases,
   getPurchasesByCoin,
   createPurchase,
   deletePurchase,
   getValueCoin,
-  getTotalValueWallet,
   getGeneralInfo,
   getLast5Purchase,
+  getTopListValue,
 };

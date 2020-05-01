@@ -5,6 +5,7 @@ import CardWallet from '../components/Card';
 import LastAction from '../components/LastActionCard';
 import FormAddAction from '../components/FormAddAction';
 import Purchases from '../components/Purchases';
+import Prices from '../components/Prices';
 import AppLayout from '../styles/AppLayout';
 import { useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -23,11 +24,10 @@ function Dashboard() {
     if (location.pathname === '/wallet') {
       getPurchases();
     }
+    if (location.pathname === '/') {
+      return <Redirect to="/home" />;
+    }
   }, []);
-
-  if (location.pathname === '/') {
-    return <Redirect to="/dashboard" />;
-  }
 
   const getPurchases = async () => {
     const response = await axios.get('/api/purchases');
@@ -55,10 +55,9 @@ function Dashboard() {
         <Navbar></Navbar>
         <div id="wrapper" style={{ marginTop: '90px' }}>
           <ToastContainer position="top-center" />
-          <Route path="/dashboard" component={() => <CardWallet />} />
-          <Route path="/dashboard" component={() => <LastAction />} />
+          <Route path="/home" component={() => <CardWallet />} />
+          <Route path="/home" component={() => <LastAction />} />
           <Route path="/wallet" component={() => <FormAddAction />} />
-
           <Route
             path="/wallet"
             component={() => (
@@ -70,6 +69,7 @@ function Dashboard() {
               </div>
             )}
           />
+          <Route path="/price" component={() => <Prices />} />
         </div>
       </AppLayout>
     </div>

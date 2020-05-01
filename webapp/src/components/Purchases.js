@@ -40,7 +40,9 @@ function Purchases(props) {
 
     //euro dépensé
     const sumEuro = await purchases.reduce(function (res, item) {
-      return res + parseFloat(item.purchase_mount);
+      return (
+        res + parseFloat(item.purchase_mount) + parseFloat(item.purchase_fees)
+      );
     }, 0);
     setTotal(Math.round(sumEuro * 100) / 100);
 

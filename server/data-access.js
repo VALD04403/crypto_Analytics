@@ -39,17 +39,19 @@ const deletePurchase = async (id) => {
   return purchase;
 };
 
-const getValueCrypto = async (coin) => {
-  const url = `http://min-api.cryptocompare.com/data/price?fsym=${coin}&tsyms=EUR&api_key=${apiKey}`;
-  const value = await (await fetch(url)).json();
-  return value.EUR;
-};
-
 const getGeneralInfo = async () => {
   const data = await pool.query(
-    'SELECT total_invest, total_fees, total_with_fees FROM general_info'
+    'SELECT total_invest, total_fees FROM general_info'
   );
   return data.rows;
+};
+
+const updateGeneralInfo = async (total, fees) => {
+  const info = await pool.query(
+    `UPDATE general_info SET total_invest = $1, totla_fess = $2`,
+    [total, fees]
+  );
+  return info.rows;
 };
 
 const getLast5Purchase = async () => {
@@ -57,6 +59,18 @@ const getLast5Purchase = async () => {
     ' SELECT coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees, purchase_id FROM purchase ORDER BY purchase_date DESC LIMIT 5 OFFSET 0;'
   );
   return top5.rows;
+};
+
+const getValueCrypto = async (coin) => {
+  const url = `http://min-api.cryptocompare.com/data/price?fsym=${coin}&tsyms=EUR&api_key=${apiKey}`;
+  const value = await (await fetch(url)).json();
+  return value.EUR;
+};
+
+const getTopList = async () => {
+  const url = `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=20&tsym=EUR&api_key=${apiKey}`;
+  const list = await (await fetch(url)).json();
+  return list;
 };
 
 module.exports = {
@@ -67,4 +81,6 @@ module.exports = {
   getValueCrypto,
   getGeneralInfo,
   getLast5Purchase,
+  updateGeneralInfo,
+  getTopList,
 };

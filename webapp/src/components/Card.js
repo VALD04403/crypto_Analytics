@@ -98,6 +98,7 @@ function CardWallet() {
                 <Grid.Column>
                   {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille:{' '}
                   <Header as="h2" color={percent > 0 ? 'green' : 'red'}>
+                    {percent > 0 ? '+' : ' -'}
                     {percent} %
                   </Header>
                 </Grid.Column>
@@ -105,7 +106,7 @@ function CardWallet() {
                   {differenceValue > 0 ? 'Plus-value' : ' Moins-value'}{' '}
                   portefeuille:{' '}
                   <Header as="h2" color={differenceValue > 0 ? 'green' : 'red'}>
-                    {differenceValue} €
+                    {differenceValue > 0 ? '+' : ' -'} {differenceValue} €
                   </Header>
                 </Grid.Column>
               </Grid.Row>
@@ -118,7 +119,7 @@ function CardWallet() {
                   Frais: <h2>{fees} €</h2>
                 </Grid.Column>
                 <Grid.Column>
-                  Total avec frais: <h2>{totalWithFees} €</h2>
+                  Fond investi avec frais: <h2>{totalWithFees} €</h2>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
