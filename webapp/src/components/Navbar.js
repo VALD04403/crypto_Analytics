@@ -1,9 +1,8 @@
-import React, { useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, Icon, Image } from 'semantic-ui-react';
 import { Container } from '../styles/Navbar';
 import { useHistory } from 'react-router-dom';
-import contextPurchases from '../context/contextPurchases';
 
 import wallet from '../assets/svg/wallet.svg';
 

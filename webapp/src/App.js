@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Route } from 'react-router-dom';
 import Dashboard from './container/Dashboard';
-import contextPurchases from './context/contextPurchases';
 
 function App() {
-  const [location, setLocation] = useState('/authentication');
+  const [currentUser, setCurrentUser] = useState(null);
 
-  const contextValue = {
-    location,
-    setLocation,
+  const getCurrentUser = async () => {
+    const response = await fetch('/api/whoami', {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
+    });
+
+    if (response.ok) {
+      const _currentUser = await response.json();
+      setCurrentUser(_currentUser);
+    }
   };
 
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
   return (
-    <div className="App">
-      <contextPurchases.Provider value={contextValue}>
-        <Route path="/" component={() => <Dashboard />} />
-      </contextPurchases.Provider>
+    <div
+      className="App"
+      style={{
+        backgroundColor: !currentUser && '#1652F0',
+      }}
+    >
+      <Route path="/" component={() => <Dashboard />} />
     </div>
   );
 }

@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Card, Image, Table, Button } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
-import contextPurchases from '../context/contextPurchases';
 
 import btc from '../assets/svg/btc.svg';
 import eth from '../assets/svg/eth.svg';
@@ -28,7 +27,6 @@ function LastAction() {
   const Capitalize = (str) => {
     return ' ' + str.toUpperCase();
   };
-  const { setLocation } = useContext(contextPurchases);
 
   useEffect(() => {
     getTop5();
@@ -38,7 +36,7 @@ function LastAction() {
     <Fragment>
       <Card style={{ width: '100%' }}>
         <Card.Content>
-          <Card.Header>Derniers échanges</Card.Header>
+          <Card.Header>Derniers transactions</Card.Header>
         </Card.Content>
         <Card.Content>
           <Table basic="very">
@@ -108,13 +106,7 @@ function LastAction() {
           </Table>
         </Card.Content>
         <Card.Content extra>
-          <Button
-            onClick={setLocation('/wallet')}
-            as={Link}
-            to="/wallet"
-            basic
-            color="blue"
-          >
+          <Button as={Link} to="/wallet" basic color="blue">
             Voir plus
           </Button>
         </Card.Content>

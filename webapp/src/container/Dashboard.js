@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Redirect, useHistory } from 'react-router-dom';
+import { Route, useHistory } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import CardWallet from '../components/Card';
 import LastAction from '../components/LastActionCard';
@@ -25,7 +25,7 @@ function Dashboard() {
     if (history.location.pathname === '/wallet') {
       getPurchases();
     } else if (history.location.pathname === '/') {
-      return <Redirect to="/authentication" />;
+      history.push('/home');
     }
   }, []);
 
