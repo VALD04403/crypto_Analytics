@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, Icon, Image } from 'semantic-ui-react';
 import { Container } from '../styles/Navbar';
-import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import contextPurchases from '../context/contextPurchases';
 
 import wallet from '../assets/svg/wallet.svg';
 
 function Navbar() {
-  const { setLocation, location } = useContext(contextPurchases);
+  const history = useHistory();
+
   const changePage = (e, { name }) => {
-    setLocation(name);
+    history.push('/' + name);
   };
 
   return (
@@ -37,7 +38,7 @@ function Navbar() {
           to="/home"
           style={{ height: '50px' }}
           name="home"
-          active={location === 'home'}
+          active={history.location.pathname === '/home'}
           onClick={changePage}
         />
         <Menu.Item
@@ -45,7 +46,7 @@ function Navbar() {
           to="/wallet"
           style={{ height: '50px' }}
           name="wallet"
-          active={location === 'wallet'}
+          active={history.location.pathname === '/wallet'}
           onClick={changePage}
         />
         <Menu.Item
@@ -53,7 +54,7 @@ function Navbar() {
           to="/price"
           style={{ height: '50px' }}
           name="price"
-          active={location === 'price'}
+          active={history.location.pathname === '/price'}
           onClick={changePage}
         />
         <Menu.Menu position="right">
@@ -62,7 +63,7 @@ function Navbar() {
             to="/account"
             style={{ height: '55px' }}
             name="account"
-            active={location === 'account'}
+            active={history.location.pathname === '/account'}
             onClick={changePage}
           >
             <Icon name="user circle" />

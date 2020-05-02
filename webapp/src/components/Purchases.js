@@ -61,6 +61,7 @@ function Purchases(props) {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     getInfos(props.category.name, props.category.purchases);
   }, []);
 

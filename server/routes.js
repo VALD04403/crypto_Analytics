@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const controllers = require('./controllers');
+const { allowAuthenticatedUserOnly } = require('./middlewares');
 
 router.get('/', (req, res) => {
   res.json({ info: 'Node.js, Express, and Postgres API' });
@@ -15,5 +16,11 @@ router.get('/top5', controllers.getLast5Purchase);
 
 router.get('/value/:coin', controllers.getValueCoin);
 router.get('/listValue', controllers.getTopListValue);
+
+router.post('/createUser', controllers.createUser);
+router.post('/sessions', controllers.createSession);
+router.get('/whoami', controllers.getCurrentUser);
+
+router.use(allowAuthenticatedUserOnly);
 
 module.exports = router;

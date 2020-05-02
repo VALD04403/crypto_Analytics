@@ -5,7 +5,7 @@ import Dashboard from './container/Dashboard';
 import contextPurchases from './context/contextPurchases';
 
 function App() {
-  const [location, setLocation] = useState('/home');
+  const [location, setLocation] = useState('/authentication');
 
   const contextValue = {
     location,

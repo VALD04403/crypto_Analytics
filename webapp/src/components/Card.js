@@ -20,7 +20,8 @@ function CardWallet() {
         setTotalWithFees(
           (Number(info.total_invest) + Number(info.total_fees)).toFixed(2)
         );
-        totalSpend = Number(info.total_invest) + Number(info.total_fees);
+        return (totalSpend =
+          Number(info.total_invest) + Number(info.total_fees));
       });
     });
   };
@@ -77,6 +78,7 @@ function CardWallet() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     getGeneralData();
     getTotalValueWallet();
   }, []);

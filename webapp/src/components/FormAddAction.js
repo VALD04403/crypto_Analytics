@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Form, Input, Select, Image } from 'semantic-ui-react';
 import { ButtonPrimary } from '../styles/Button';
 import axios from 'axios';
@@ -176,6 +176,10 @@ function FormAddAction() {
       ),
     },
   ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <Card>
       <Card.Content>
