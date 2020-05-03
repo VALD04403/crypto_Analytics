@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Icon, Image } from 'semantic-ui-react';
+import { Menu, Image, Dropdown } from 'semantic-ui-react';
 import { Container } from '../styles/Navbar';
 import { useHistory } from 'react-router-dom';
+import contextUser from '../context/contextUser';
 
 import wallet from '../assets/svg/wallet.svg';
 
 function Navbar() {
   const history = useHistory();
+  const { setCurrentUser, getCurrentUser } = useContext(contextUser);
 
   const changePage = (e, { name }) => {
     history.push('/' + name);
+  };
+
+  const logOut = async () => {
+    const response = await fetch('/api/sessions', {
+      headers: { 'Content-Type': 'Application/json' },
+      method: 'DELETE',
+    });
+    if (response.ok) {
+      setCurrentUser(null);
+      getCurrentUser();
+    }
   };
 
   return (
@@ -58,14 +71,22 @@ function Navbar() {
         />
         <Menu.Menu position="right">
           <Menu.Item
-            as={Link}
-            to="/account"
             style={{ height: '55px' }}
             name="account"
             active={history.location.pathname === '/account'}
-            onClick={changePage}
           >
-            <Icon name="user circle" />
+            {/* <Header as="h3">
+              <Header.Content> */}
+            <Dropdown icon="user circle">
+              <Dropdown.Menu>
+                <Dropdown.Item text="Profil" />
+                <Dropdown.Item text="Paramètres" />
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={logOut} text="Déconnexion" />
+              </Dropdown.Menu>
+            </Dropdown>
+            {/* </Header.Content>
+            </Header> */}
           </Menu.Item>
         </Menu.Menu>
       </Menu>

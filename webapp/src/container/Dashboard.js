@@ -6,7 +6,7 @@ import LastAction from '../components/LastActionCard';
 import FormAddAction from '../components/FormAddAction';
 import Purchases from '../components/Purchases';
 import Prices from '../components/Prices';
-import AuthenticationForm from '../components/AuthenticationForm';
+
 import AppLayout from '../styles/AppLayout';
 import { ToastContainer } from 'react-toastify';
 import axios from 'axios';
@@ -14,14 +14,12 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 function Dashboard() {
   const [items, setItems] = useState();
-  const [currentUser, setCurrentUser] = useState(null);
 
   const orderItems = [];
   const listItems = [];
   const history = useHistory();
 
   useEffect(() => {
-    getCurrentUser();
     if (history.location.pathname === '/wallet') {
       getPurchases();
     } else if (history.location.pathname === '/') {
@@ -49,52 +47,29 @@ function Dashboard() {
     setItems(orderItems);
   };
 
-  const getCurrentUser = async () => {
-    const response = await fetch('/api/whoami', {
-      headers: { 'Content-Type': 'application/json' },
-      method: 'GET',
-    });
-
-    if (response.ok) {
-      const _currentUser = await response.json();
-      setCurrentUser(_currentUser);
-    } else {
-      history.push('/authentication');
-    }
-  };
-
   return (
     <div className="Dashboard">
       <AppLayout>
         <div id="wrapper" style={{ marginTop: '90px' }}>
-          {currentUser ? (
-            <div>
-              <Navbar></Navbar>
-              <ToastContainer position="top-center" />
-              <Route path="/home" component={() => <CardWallet />} />
-              <Route path="/home" component={() => <LastAction />} />
-              <Route path="/wallet" component={() => <FormAddAction />} />
-              <Route
-                path="/wallet"
-                component={() => (
-                  <div>
-                    {items &&
-                      items.map((category) => (
-                        <Purchases key={category.name} category={category} />
-                      ))}
-                  </div>
-                )}
-              />
-              <Route path="/price" component={() => <Prices />} />
-            </div>
-          ) : (
+          <div>
+            <Navbar></Navbar>
+            <ToastContainer position="top-center" />
+            <Route path="/home" component={() => <CardWallet />} />
+            <Route path="/home" component={() => <LastAction />} />
+            <Route path="/wallet" component={() => <FormAddAction />} />
             <Route
-              path="/authentication"
+              path="/wallet"
               component={() => (
-                <AuthenticationForm onUserSignedIn={getCurrentUser} />
+                <div>
+                  {items &&
+                    items.map((category) => (
+                      <Purchases key={category.name} category={category} />
+                    ))}
+                </div>
               )}
             />
-          )}
+            <Route path="/price" component={() => <Prices />} />
+          </div>
         </div>
       </AppLayout>
     </div>

@@ -49,7 +49,11 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
 
   return (
     <Container>
-      <Image style={{ width: '90px' }} centered src={logo} />
+      <Image
+        style={{ width: '90px', paddingTop: '10em' }}
+        centered
+        src={logo}
+      />
       <Card className="ui centered card">
         <Card.Content>
           <Header textAlign="center">

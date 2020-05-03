@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Route } from 'react-router-dom';
+import { Route, useHistory } from 'react-router-dom';
 import Dashboard from './container/Dashboard';
+import AuthenticationForm from './components/AuthenticationForm';
+import contextUser from './context/contextUser';
 
 function App() {
+  const history = useHistory();
   const [currentUser, setCurrentUser] = useState(null);
 
   const getCurrentUser = async () => {
@@ -15,7 +18,15 @@ function App() {
     if (response.ok) {
       const _currentUser = await response.json();
       setCurrentUser(_currentUser);
+    } else {
+      history.push('/authentication');
     }
+  };
+
+  const contextValue = {
+    currentUser,
+    setCurrentUser,
+    getCurrentUser,
   };
 
   useEffect(() => {
@@ -26,10 +37,23 @@ function App() {
     <div
       className="App"
       style={{
-        backgroundColor: !currentUser && '#1652F0',
+        height: '100vh',
+        backgroundColor:
+          history.location.pathname === '/authentication' && '#1652F0',
       }}
     >
-      <Route path="/" component={() => <Dashboard />} />
+      <contextUser.Provider value={contextValue}>
+        {currentUser ? (
+          <Route path="/" component={() => <Dashboard />} />
+        ) : (
+          <Route
+            path="/authentication"
+            component={() => (
+              <AuthenticationForm onUserSignedIn={getCurrentUser} />
+            )}
+          />
+        )}
+      </contextUser.Provider>
     </div>
   );
 }

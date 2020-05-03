@@ -19,6 +19,7 @@ router.get('/listValue', controllers.getTopListValue);
 
 router.post('/createUser', controllers.createUser);
 router.post('/sessions', controllers.createSession);
+router.delete('/sessions', controllers.deleteSession);
 router.get('/whoami', controllers.getCurrentUser);
 
 router.use(allowAuthenticatedUserOnly);
