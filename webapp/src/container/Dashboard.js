@@ -12,6 +12,7 @@ import AppLayout from '../styles/AppLayout';
 import { ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { Grid } from 'semantic-ui-react';
 
 function Dashboard() {
   const [items, setItems] = useState();
@@ -59,18 +60,37 @@ function Dashboard() {
             <ToastContainer position="top-center" />
             <Route path="/accueil" component={() => <CardWallet />} />
             <Route path="/accueil" component={() => <LastAction />} />
-            <Route path="/portefeuille" component={() => <FormAddAction />} />
-            <Route
-              path="/portefeuille"
-              component={() => (
-                <div>
-                  {items &&
-                    items.map((category) => (
-                      <Purchases key={category.name} category={category} />
-                    ))}
-                </div>
-              )}
-            />
+            <Grid>
+              <Grid.Row>
+                <Grid.Column mobile={16} tablet={6} computer={4}>
+                  <Route
+                    path="/portefeuille"
+                    component={() => (
+                      <FormAddAction
+                        onSubmitForm={getPurchases(currentUser.id)}
+                      />
+                    )}
+                  />
+                </Grid.Column>
+                <Grid.Column mobile={16} tablet={10} computer={12}>
+                  <Route
+                    path="/portefeuille"
+                    component={() => (
+                      <div>
+                        {items &&
+                          items.map((category) => (
+                            <Purchases
+                              key={category.name}
+                              category={category}
+                            />
+                          ))}
+                      </div>
+                    )}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+
             <Route path="/prix" component={() => <Prices />} />
           </div>
         </div>

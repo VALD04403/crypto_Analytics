@@ -19,7 +19,7 @@ import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
 import bat from '../assets/svg/bat.svg';
 
-function FormAddAction() {
+function FormAddAction({ onSubmitForm }) {
   const [date, setDate] = useState();
   const [name, setName] = useState('');
   const [amountCrypto, setAmountCrypto] = useState('');
@@ -69,6 +69,7 @@ function FormAddAction() {
           document.getElementById('coin-form').reset();
           setName(null);
           setDate(null);
+          onSubmitForm();
         })
         .catch(function (error) {
           console.log(error);
@@ -191,7 +192,7 @@ function FormAddAction() {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <Card>
+    <Card style={{ marginTop: '1em' }}>
       <Card.Content>
         <Card.Header>Ajouter un échange</Card.Header>
       </Card.Content>
