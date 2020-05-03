@@ -10,9 +10,10 @@ const pool = new pg.Pool({
 
 //crypto
 
-const getPurchases = async () => {
+const getPurchases = async (id) => {
   const purchases = await pool.query(
-    'SELECT * FROM purchase order by purchase_date DESC'
+    'SELECT * FROM purchase WHERE user_id = $1 order by purchase_date DESC',
+    [id]
   );
   return purchases.rows;
 };
@@ -35,7 +36,7 @@ const createPurchase = async (coin, date, price, mount, amount, fees) => {
 
 const deletePurchase = async (id) => {
   const purchase = await pool.query(
-    'DELETE FROM purchase WHERE purchase_id=$1',
+    'DELETE FROM purchase WHERE purchase_id = $1',
     [id]
   );
   return purchase;
@@ -56,9 +57,10 @@ const updateGeneralInfo = async (total, fees) => {
   return info.rows;
 };
 
-const getLast5Purchase = async () => {
+const getLast5Purchase = async (id) => {
   const top5 = await pool.query(
-    ' SELECT coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees, purchase_id FROM purchase ORDER BY purchase_date DESC LIMIT 5 OFFSET 0;'
+    ' SELECT coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees, purchase_id FROM purchase WHERE user_id = $1 ORDER BY purchase_date DESC LIMIT 5 OFFSET 0',
+    [id]
   );
   return top5.rows;
 };
@@ -77,11 +79,11 @@ const getTopList = async () => {
 
 // user
 
-const createUser = async (username, password) => {
+const createUser = async (username, firstname, name, mail, password) => {
   try {
     await pool.query(
-      `INSERT INTO users (username, password) VALUES ($1, crypt($2, gen_salt('bf')))`,
-      [username, password]
+      `INSERT INTO users (username,firstname, name, mail, password) VALUES ($1, $2,$3, crypt($4, gen_salt('bf')), crypt($5, gen_salt('bf')))`,
+      [username, firstname, name, mail, password]
     );
   } catch (error) {
     // Postgres UNIQUE VIOLATION

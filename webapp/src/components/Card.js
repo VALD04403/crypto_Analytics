@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Card, Grid, Header, Divider, Dimmer, Loader } from 'semantic-ui-react';
+import contextUser from '../context/contextUser';
 
 function CardWallet() {
   let totalSpend = 0;
@@ -10,6 +11,8 @@ function CardWallet() {
   const [fees, setFees] = useState();
   const [totalWithFees, setTotalWithFees] = useState();
   const [loading, setLoading] = useState(true);
+
+  const { currentUser } = useContext(contextUser);
 
   const getGeneralData = async () => {
     const data = await fetch('/api/info');
@@ -26,13 +29,13 @@ function CardWallet() {
     });
   };
 
-  const getTotalValueWallet = async () => {
+  const getTotalValueWallet = async (id) => {
     const orderItems = [];
     const listItems = [];
     const totalAmountByCoin = [];
     const total = [];
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    const purschases = await fetch('/api/purchases');
+    const purschases = await fetch(`/api/purchases/${id}`);
     purschases.json().then((res) => {
       res.purchases.map((item) => {
         if (listItems.indexOf(item.coin_name) === -1) {
@@ -80,7 +83,7 @@ function CardWallet() {
   useEffect(() => {
     window.scrollTo(0, 0);
     getGeneralData();
-    getTotalValueWallet();
+    getTotalValueWallet(currentUser.id);
   }, []);
 
   return (

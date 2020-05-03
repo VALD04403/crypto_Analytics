@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
-import { Card, Header, Form, Input, Container, Image } from 'semantic-ui-react';
+import {
+  Card,
+  Header,
+  Message,
+  Form,
+  Input,
+  Container,
+  Image,
+} from 'semantic-ui-react';
 import { ButtonPrimary } from '../styles/Button';
 import { useHistory } from 'react-router-dom';
 import { LinkSubscribe } from '../styles/Item';
 import logo from '../assets/svg/wallet_white.svg';
 
-const AuthenticationForm = ({ onUserSignedIn }) => {
+const SubscribeForm = ({ onUserSignedIn }) => {
   const [isSubmitted, setisSubmitted] = useState(false);
+  const [password, setPassword] = useState('');
 
   const history = useHistory();
 
@@ -14,14 +23,20 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const username = formData.get('username');
+    const firstname = formData.get('firstname');
+    const name = formData.get('name');
+    const mail = formData.get('mail');
     const password = formData.get('password');
-    const url = '/api/sessions';
+    const url = '/api/createUser';
+    setPassword(formData.get('password'));
     if (password.length > 7) {
       const response = await fetch(url, {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         body: JSON.stringify({
-          username,
+          firstname,
+          name,
+          mail,
           password,
         }),
       });
@@ -32,14 +47,14 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
     }
   };
 
-  const goToSubscribe = () => {
-    history.push('/subscribe');
+  const gotToAuth = () => {
+    history.push('/authentication');
   };
 
   return (
     <Container>
       <Image
-        style={{ width: '90px', paddingTop: '10em', paddingBottom: '2em' }}
+        style={{ width: '90px', paddingTop: '5em', paddingBottom: '2em' }}
         centered
         src={logo}
       />
@@ -47,13 +62,30 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
         <Card.Content>
           <Header textAlign="center">
             <Header.Content>
-              <h1 style={{ fontWeight: '200', color: '#1652F0' }}>Connexion</h1>
+              <h1 style={{ fontWeight: '200', color: '#1652F0' }}>
+                Inscription
+              </h1>
             </Header.Content>
           </Header>
           <Form onSubmit={submit}>
             <Form.Field
               name="username"
               placeholder="Nom d'utilisateur"
+              control={Input}
+            ></Form.Field>
+            <Form.Field
+              name="firstname"
+              placeholder="Prénom"
+              control={Input}
+            ></Form.Field>
+            <Form.Field
+              name="name"
+              placeholder="Nom"
+              control={Input}
+            ></Form.Field>
+            <Form.Field
+              name="mail"
+              placeholder="Mail"
               control={Input}
             ></Form.Field>
             <Form.Field
@@ -68,16 +100,25 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
               }}
               type="submit"
             >
-              Se connecter
+              S'inscrire
             </ButtonPrimary>
           </Form>
+          {isSubmitted && password.length < 8 ? (
+            <Message negative compact>
+              <p className="text">
+                Le mot de passe doit contenir au minimum 8 caractères.
+              </p>
+            </Message>
+          ) : (
+            ''
+          )}
         </Card.Content>
       </Card>
-      <LinkSubscribe onClick={goToSubscribe}>
-        Pas encore de compte ? Inscrivez-vous
+      <LinkSubscribe onClick={gotToAuth}>
+        Déjà un compte ? Connectez-vous
       </LinkSubscribe>
     </Container>
   );
 };
 
-export default AuthenticationForm;
+export default SubscribeForm;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Route, useHistory } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import CardWallet from '../components/Card';
@@ -6,6 +6,7 @@ import LastAction from '../components/LastActionCard';
 import FormAddAction from '../components/FormAddAction';
 import Purchases from '../components/Purchases';
 import Prices from '../components/Prices';
+import contextUser from '../context/contextUser';
 
 import AppLayout from '../styles/AppLayout';
 import { ToastContainer } from 'react-toastify';
@@ -18,18 +19,19 @@ function Dashboard() {
   const orderItems = [];
   const listItems = [];
   const history = useHistory();
+  const { currentUser } = useContext(contextUser);
 
   useEffect(() => {
     if (history.location.pathname === '/portefeuille') {
-      getPurchases();
+      getPurchases(currentUser.id);
     } else if (history.location.pathname === '/') {
       history.push('/accueil');
     }
     window.scrollTo(0, 0);
   }, []);
 
-  const getPurchases = async () => {
-    const response = await axios.get('/api/purchases');
+  const getPurchases = async (id) => {
+    const response = await axios.get(`/api/purchases/${id}`);
     response.data.purchases.map((item) => {
       if (listItems.indexOf(item.coin_name) === -1) {
         const coin = {

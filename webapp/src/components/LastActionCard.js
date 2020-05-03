@@ -1,7 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { Card, Image, Table, Button, Header } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
+import contextUser from '../context/contextUser';
 
 import btc from '../assets/svg/btc.svg';
 import eth from '../assets/svg/eth.svg';
@@ -16,10 +17,11 @@ import xlm from '../assets/svg/xlm.svg';
 import bat from '../assets/svg/bat.svg';
 
 function LastAction() {
+  const { currentUser } = useContext(contextUser);
   const [top5, setTop5] = useState();
 
-  const getTop5 = async () => {
-    const data = await fetch('/api/top5');
+  const getTop5 = async (id) => {
+    const data = await fetch(`/api/top5/${id}`);
     await data.json().then((res) => {
       setTop5(res.top5);
     });
@@ -30,7 +32,7 @@ function LastAction() {
   };
 
   useEffect(() => {
-    getTop5();
+    getTop5(currentUser.id);
   }, []);
 
   return (

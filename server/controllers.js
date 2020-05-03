@@ -2,7 +2,8 @@ const dataAccess = require('./data-access');
 
 //crypto
 const getPurchases = async (req, res) => {
-  const purchases = await dataAccess.getPurchases();
+  const { id } = req.params;
+  const purchases = await dataAccess.getPurchases(id);
   return res.status(200).json({ purchases });
 };
 
@@ -52,7 +53,8 @@ const getGeneralInfo = async (req, res) => {
 };
 
 const getLast5Purchase = async (req, res) => {
-  const top5 = await dataAccess.getLast5Purchase();
+  const { id } = req.params;
+  const top5 = await dataAccess.getLast5Purchase(id);
   return res.status(200).json({ top5 });
 };
 
@@ -78,9 +80,9 @@ const getCleanPassword = (password) => {
 
 const createUser = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username, firstname, name, mail } = req.body;
     const password = getCleanPassword(req.body.password);
-    await dataAccess.createUser(username, password);
+    await dataAccess.createUser(username, firstname, name, mail, password);
   } catch (error) {
     if (error.isUnknown) {
       return res.sendStatus(500);

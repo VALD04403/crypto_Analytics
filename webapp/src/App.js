@@ -4,6 +4,7 @@ import { Route, useHistory } from 'react-router-dom';
 import Dashboard from './container/Dashboard';
 import AuthenticationForm from './components/AuthenticationForm';
 import contextUser from './context/contextUser';
+import SubscribeForm from './components/SubscribeForm';
 
 function App() {
   const history = useHistory();
@@ -17,8 +18,12 @@ function App() {
 
     if (response.ok) {
       const _currentUser = await response.json();
+      console.log(_currentUser);
       setCurrentUser(_currentUser);
-    } else {
+    } else if (
+      history.location.pathname !== '/authentication' &&
+      history.location.pathname !== '/subscribe'
+    ) {
       history.push('/authentication');
     }
     if (history.location.pathname === '/authentication' && response.ok) {
@@ -42,18 +47,25 @@ function App() {
       style={{
         height: '100vh',
         backgroundColor:
-          history.location.pathname === '/authentication' && '#1652F0',
+          (history.location.pathname === '/authentication' ||
+            history.location.pathname === '/subscribe') &&
+          '#1652F0',
       }}
     >
       <contextUser.Provider value={contextValue}>
         {currentUser ? (
           <Route path="/" component={() => <Dashboard />} />
-        ) : (
+        ) : history.location.pathname === '/authentication' ? (
           <Route
             path="/authentication"
             component={() => (
               <AuthenticationForm onUserSignedIn={getCurrentUser} />
             )}
+          />
+        ) : (
+          <Route
+            path="/subscribe"
+            component={() => <SubscribeForm onUserSignedIn={getCurrentUser} />}
           />
         )}
       </contextUser.Provider>
