@@ -1,0 +1,7 @@
+i.icon {
+  font-size: 30px;
+}
+
+.ui.menu .ui.dropdown .menu > .item.logout {
+  color: #ec0000 !important;
+}

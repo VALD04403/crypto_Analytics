@@ -42,7 +42,7 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
         } else {
           setIsInSigninMode(true);
         }
-        history.push('/home');
+        history.push('/accueil');
       }
     }
   };

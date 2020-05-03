@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { Menu, Image, Dropdown } from 'semantic-ui-react';
 import { Container } from '../styles/Navbar';
 import { useHistory } from 'react-router-dom';
 import contextUser from '../context/contextUser';
+import '../styles/Navbar.css';
 
 import wallet from '../assets/svg/wallet.svg';
 
@@ -46,47 +46,41 @@ function Navbar() {
           <Image src={wallet} />
         </Menu.Item>
         <Menu.Item
-          as={Link}
-          to="/home"
           style={{ height: '50px' }}
-          name="home"
-          active={history.location.pathname === '/home'}
+          name="accueil"
+          active={history.location.pathname === '/accueil'}
           onClick={changePage}
         />
         <Menu.Item
-          as={Link}
-          to="/wallet"
           style={{ height: '50px' }}
-          name="wallet"
-          active={history.location.pathname === '/wallet'}
+          name="portefeuille"
+          active={history.location.pathname === '/portefeuille'}
           onClick={changePage}
         />
         <Menu.Item
-          as={Link}
-          to="/price"
           style={{ height: '50px' }}
-          name="price"
-          active={history.location.pathname === '/price'}
+          name="prix"
+          active={history.location.pathname === '/prix'}
           onClick={changePage}
         />
         <Menu.Menu position="right">
           <Menu.Item
             style={{ height: '55px' }}
-            name="account"
-            active={history.location.pathname === '/account'}
+            name="compte"
+            active={history.location.pathname === '/compte'}
           >
-            {/* <Header as="h3">
-              <Header.Content> */}
             <Dropdown icon="user circle">
               <Dropdown.Menu>
                 <Dropdown.Item text="Profil" />
                 <Dropdown.Item text="Paramètres" />
                 <Dropdown.Divider />
-                <Dropdown.Item onClick={logOut} text="Déconnexion" />
+                <Dropdown.Item
+                  className="logout"
+                  onClick={logOut}
+                  text="Déconnexion"
+                />
               </Dropdown.Menu>
             </Dropdown>
-            {/* </Header.Content>
-            </Header> */}
           </Menu.Item>
         </Menu.Menu>
       </Menu>

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Card, Image, Table, Button } from 'semantic-ui-react';
+import { Card, Image, Table, Button, Header } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
+import bat from '../assets/svg/bat.svg';
 
 function LastAction() {
   const [top5, setTop5] = useState();
@@ -36,7 +37,9 @@ function LastAction() {
     <Fragment>
       <Card style={{ width: '100%' }}>
         <Card.Content>
-          <Card.Header>Derniers transactions</Card.Header>
+          <Header style={{ opacity: '0.6' }} floated="left">
+            Derniers transactions
+          </Header>
         </Card.Content>
         <Card.Content>
           <Table basic="very">
@@ -83,6 +86,8 @@ function LastAction() {
                             ? bch
                             : item.coin_name === 'xlm'
                             ? xlm
+                            : item.coin_name === 'bat'
+                            ? bat
                             : ''
                         }
                       ></Image>
@@ -106,7 +111,7 @@ function LastAction() {
           </Table>
         </Card.Content>
         <Card.Content extra>
-          <Button as={Link} to="/wallet" basic color="blue">
+          <Button as={Link} to="/portefeuille" basic color="blue">
             Voir plus
           </Button>
         </Card.Content>

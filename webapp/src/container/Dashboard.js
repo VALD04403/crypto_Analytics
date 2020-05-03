@@ -20,11 +20,12 @@ function Dashboard() {
   const history = useHistory();
 
   useEffect(() => {
-    if (history.location.pathname === '/wallet') {
+    if (history.location.pathname === '/portefeuille') {
       getPurchases();
     } else if (history.location.pathname === '/') {
-      history.push('/home');
+      history.push('/accueil');
     }
+    window.scrollTo(0, 0);
   }, []);
 
   const getPurchases = async () => {
@@ -50,15 +51,15 @@ function Dashboard() {
   return (
     <div className="Dashboard">
       <AppLayout>
-        <div id="wrapper" style={{ marginTop: '90px' }}>
+        <div id="wrapper" style={{ marginTop: '90px', paddingBottom: '30px' }}>
           <div>
             <Navbar></Navbar>
             <ToastContainer position="top-center" />
-            <Route path="/home" component={() => <CardWallet />} />
-            <Route path="/home" component={() => <LastAction />} />
-            <Route path="/wallet" component={() => <FormAddAction />} />
+            <Route path="/accueil" component={() => <CardWallet />} />
+            <Route path="/accueil" component={() => <LastAction />} />
+            <Route path="/portefeuille" component={() => <FormAddAction />} />
             <Route
-              path="/wallet"
+              path="/portefeuille"
               component={() => (
                 <div>
                   {items &&
@@ -68,7 +69,7 @@ function Dashboard() {
                 </div>
               )}
             />
-            <Route path="/price" component={() => <Prices />} />
+            <Route path="/prix" component={() => <Prices />} />
           </div>
         </div>
       </AppLayout>

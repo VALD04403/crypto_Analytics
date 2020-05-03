@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Grid, Header, Divider, Dimmer, Loader } from 'semantic-ui-react';
 
 function CardWallet() {
@@ -84,55 +84,66 @@ function CardWallet() {
   }, []);
 
   return (
-    <Fragment>
-      <Card fluid>
-        <Card.Content>
-          <Card.Header as="h1">Solde du portefeuille</Card.Header>
-        </Card.Content>
-        <Card.Content>
-          {!loading ? (
-            <Grid columns={3} divided>
-              <Grid.Row>
-                <Grid.Column>
-                  Solde portefeuille:{' '}
-                  <h2>{walletValue && walletValue.toFixed(2)} €</h2>
-                </Grid.Column>
-                <Grid.Column>
-                  {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille:{' '}
-                  <Header as="h2" color={percent > 0 ? 'green' : 'red'}>
-                    {percent > 0 ? '+' : ' -'}
-                    {percent} %
-                  </Header>
-                </Grid.Column>
-                <Grid.Column>
-                  {differenceValue > 0 ? 'Plus-value' : ' Moins-value'}{' '}
-                  portefeuille:{' '}
-                  <Header as="h2" color={differenceValue > 0 ? 'green' : 'red'}>
-                    {differenceValue > 0 ? '+' : ' -'} {differenceValue} €
-                  </Header>
-                </Grid.Column>
-              </Grid.Row>
-              <Divider></Divider>
-              <Grid.Row>
-                <Grid.Column>
-                  Fond investi: <h2>{total} € </h2>
-                </Grid.Column>
-                <Grid.Column>
-                  Frais: <h2>{fees} €</h2>
-                </Grid.Column>
-                <Grid.Column>
-                  Fond investi avec frais: <h2>{totalWithFees} €</h2>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          ) : (
-            <Dimmer active>
-              <Loader />
-            </Dimmer>
-          )}
-        </Card.Content>
-      </Card>
-    </Fragment>
+    <Card fluid>
+      <Card.Content>
+        <Header style={{ opacity: '0.6' }} floated="left">
+          Solde du portefeuille
+        </Header>
+      </Card.Content>
+      <Card.Content>
+        {!loading ? (
+          <Grid columns={3} divided>
+            <Grid.Row>
+              <Grid.Column>
+                Solde portefeuille:{' '}
+                <h2 style={{ marginTop: '5px' }}>
+                  {walletValue && walletValue.toFixed(2)} €
+                </h2>
+              </Grid.Column>
+              <Grid.Column>
+                {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille:{' '}
+                <Header
+                  style={{ marginTop: '5px' }}
+                  as="h2"
+                  color={percent > 0 ? 'green' : 'red'}
+                >
+                  {percent > 0 ? '+' : ' -'}
+                  {percent} %
+                </Header>
+              </Grid.Column>
+              <Grid.Column>
+                {differenceValue > 0 ? 'Plus-value' : ' Moins-value'}{' '}
+                portefeuille:{' '}
+                <Header
+                  style={{ marginTop: '5px' }}
+                  as="h2"
+                  color={differenceValue > 0 ? 'green' : 'red'}
+                >
+                  {differenceValue > 0 ? '+' : ' -'} {differenceValue} €
+                </Header>
+              </Grid.Column>
+            </Grid.Row>
+            <Divider></Divider>
+            <Grid.Row>
+              <Grid.Column>
+                Fond investi: <h2 style={{ marginTop: '5px' }}>{total} € </h2>
+              </Grid.Column>
+              <Grid.Column>
+                Frais: <h2 style={{ marginTop: '5px' }}>{fees} €</h2>
+              </Grid.Column>
+              <Grid.Column>
+                Fond investi avec frais:{' '}
+                <h2 style={{ marginTop: '5px' }}>{totalWithFees} €</h2>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        ) : (
+          <Dimmer active>
+            <Loader />
+          </Dimmer>
+        )}
+      </Card.Content>
+    </Card>
   );
 }
 

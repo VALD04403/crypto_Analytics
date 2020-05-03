@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Card, Image, Table, Header } from 'semantic-ui-react';
+import { Card, Image, Table, Header, Dimmer, Loader } from 'semantic-ui-react';
 
 import btc from '../assets/svg/btc.svg';
 import eth from '../assets/svg/eth.svg';
@@ -22,72 +22,79 @@ function Prices() {
     });
   };
 
-  const lowerCase = (name) => {
-    return name.toLowerCase();
-  };
-
   useEffect(() => {
     getValueList();
+    window.scrollTo(0, 0);
   }, []);
 
   return (
     <Fragment>
       <Card style={{ width: '100%' }}>
         <Card.Content>
-          <Table basic="very" celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell style={{ width: '50px' }}></Table.HeaderCell>
-                <Table.HeaderCell>Nom</Table.HeaderCell>
-                <Table.HeaderCell>Prix</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {list &&
-                list.map((item) => (
-                  <Table.Row key={item.CoinInfo.Id}>
-                    <Table.Cell style={{ width: '50px' }}>
-                      <Image
-                        style={{
-                          width: '30px',
-                          height: '30px',
-                        }}
-                        src={
-                          item.CoinInfo.Name === 'BTC'
-                            ? btc
-                            : item.CoinInfo.Name === 'ETH'
-                            ? eth
-                            : item.CoinInfo.Name === 'ETC'
-                            ? etc
-                            : item.CoinInfo.Name === 'XTZ'
-                            ? xtz
-                            : item.CoinInfo.Name === 'LTC'
-                            ? ltc
-                            : item.CoinInfo.Name === 'XRP'
-                            ? xrp
-                            : item.CoinInfo.Name === 'EOS'
-                            ? eos
-                            : item.CoinInfo.Name === 'KNC'
-                            ? knc
-                            : item.CoinInfo.Name === 'BCH'
-                            ? bch
-                            : item.CoinInfo.Name === 'XLM'
-                            ? xlm
-                            : ''
-                        }
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Header as="h3">{item.CoinInfo.FullName}</Header>
-                      <div>{item.CoinInfo.Name}</div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Header as="h3">{item.RAW.EUR.PRICE} €</Header>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-            </Table.Body>
-          </Table>
+          {list ? (
+            <Table basic="very">
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell
+                    style={{ width: '50px' }}
+                  ></Table.HeaderCell>
+                  <Table.HeaderCell>Nom</Table.HeaderCell>
+                  <Table.HeaderCell>Prix</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {list &&
+                  list.map((item) => (
+                    <Table.Row key={item.CoinInfo.Id}>
+                      <Table.Cell style={{ width: '50px' }}>
+                        <Image
+                          style={{
+                            width: '30px',
+                            height: '30px',
+                          }}
+                          src={
+                            item.CoinInfo.Name === 'BTC'
+                              ? btc
+                              : item.CoinInfo.Name === 'ETH'
+                              ? eth
+                              : item.CoinInfo.Name === 'ETC'
+                              ? etc
+                              : item.CoinInfo.Name === 'XTZ'
+                              ? xtz
+                              : item.CoinInfo.Name === 'LTC'
+                              ? ltc
+                              : item.CoinInfo.Name === 'XRP'
+                              ? xrp
+                              : item.CoinInfo.Name === 'EOS'
+                              ? eos
+                              : item.CoinInfo.Name === 'KNC'
+                              ? knc
+                              : item.CoinInfo.Name === 'BCH'
+                              ? bch
+                              : item.CoinInfo.Name === 'XLM'
+                              ? xlm
+                              : ''
+                          }
+                        />
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Header as="h3">{item.CoinInfo.FullName}</Header>
+                        <div>{item.CoinInfo.Name}</div>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Header style={{ fontWeight: '200' }} as="h3">
+                          {item.RAW.EUR.PRICE} €
+                        </Header>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+              </Table.Body>
+            </Table>
+          ) : (
+            <Dimmer active style={{ height: '200px' }}>
+              <Loader />
+            </Dimmer>
+          )}
         </Card.Content>
       </Card>
     </Fragment>

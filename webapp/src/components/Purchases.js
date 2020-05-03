@@ -12,6 +12,7 @@ import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
+import bat from '../assets/svg/bat.svg';
 
 function Purchases(props) {
   const [value, setValue] = useState();
@@ -53,7 +54,9 @@ function Purchases(props) {
     //pourcentage plus-value/moins-value
     const difference = valueOfWallet - sumEuro;
     const percentValue = (difference / sumEuro) * 100;
-    setPercent(Math.round(percentValue * 100) / 100);
+    percentValue === Infinity
+      ? setPercent(100)
+      : setPercent(Math.round(percentValue * 100) / 100);
   };
 
   const Capitalize = (str) => {
@@ -95,6 +98,8 @@ function Purchases(props) {
                       ? bch
                       : props.category.name === 'xlm'
                       ? xlm
+                      : props.category.name === 'bat'
+                      ? bat
                       : ''
                   }
                 ></Image>
@@ -119,7 +124,7 @@ function Purchases(props) {
           </Dimmer>
         )}
         <Card.Content>
-          <Table basic="very" celled striped>
+          <Table basic="very" striped>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Volume</Table.HeaderCell>

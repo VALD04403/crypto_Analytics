@@ -17,6 +17,7 @@ import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
+import bat from '../assets/svg/bat.svg';
 
 function FormAddAction() {
   const [date, setDate] = useState();
@@ -34,7 +35,7 @@ function FormAddAction() {
   const handleChangeDate = (date) => setDate(date);
   const handleChangeName = (e, { value }) => setName(value);
 
-  const Greet = () => <div>Achat ajouté !</div>;
+  const Greet = () => <div>Échange ajouté !</div>;
   const submit = async (event) => {
     event.preventDefault();
     setIsSubmitted(true);
@@ -84,6 +85,15 @@ function FormAddAction() {
         <span>
           <Image style={{ width: '20px', marginRight: '10px' }} src={btc} />{' '}
           Bitcoin
+        </span>
+      ),
+    },
+    {
+      key: 'bat',
+      value: 'bat',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={bat} /> Bat
         </span>
       ),
     },
@@ -183,7 +193,7 @@ function FormAddAction() {
   return (
     <Card>
       <Card.Content>
-        <Card.Header>Ajouter un achat</Card.Header>
+        <Card.Header>Ajouter un échange</Card.Header>
       </Card.Content>
       <Card.Content>
         <Card.Meta style={{ marginTop: '20px' }}>

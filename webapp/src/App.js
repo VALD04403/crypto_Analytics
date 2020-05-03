@@ -21,6 +21,9 @@ function App() {
     } else {
       history.push('/authentication');
     }
+    if (history.location.pathname === '/authentication' && response.ok) {
+      history.push('/accueil');
+    }
   };
 
   const contextValue = {

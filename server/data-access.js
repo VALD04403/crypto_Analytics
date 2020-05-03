@@ -50,7 +50,7 @@ const getGeneralInfo = async () => {
 
 const updateGeneralInfo = async (total, fees) => {
   const info = await pool.query(
-    `UPDATE general_info SET total_invest = $1, totla_fess = $2`,
+    `UPDATE general_info SET total_invest = $1, total_fees = $2`,
     [total, fees]
   );
   return info.rows;
