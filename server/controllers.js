@@ -23,6 +23,7 @@ const createPurchase = async (req, res) => {
       amountEuro,
       amountCrypto,
       fees,
+      currentUser,
     } = req.body;
     await dataAccess.createPurchase(
       cryptoName,
@@ -30,7 +31,8 @@ const createPurchase = async (req, res) => {
       price,
       amountEuro,
       amountCrypto,
-      fees
+      fees,
+      currentUser.id
     );
     const updateTotal = Number(data[0].total_invest) + Number(amountEuro);
     const updateFees = Number(data[0].total_fees) + Number(fees);

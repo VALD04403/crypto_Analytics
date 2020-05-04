@@ -18,7 +18,6 @@ function App() {
 
     if (response.ok) {
       const _currentUser = await response.json();
-      console.log(_currentUser);
       setCurrentUser(_currentUser);
     } else if (
       history.location.pathname !== '/authentication' &&

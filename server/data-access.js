@@ -26,10 +26,18 @@ const getPurchasesByCoin = async (coin) => {
   return purchases.rows;
 };
 
-const createPurchase = async (coin, date, price, mount, amount, fees) => {
+const createPurchase = async (
+  coin,
+  date,
+  price,
+  mount,
+  amount,
+  fees,
+  userId
+) => {
   const purchase = await pool.query(
-    'INSERT INTO purchase (coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees) VALUES($1, $2, $3, $4, $5, $6 )',
-    [coin, date, price, mount, amount, fees]
+    'INSERT INTO purchase (coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees, user_id) VALUES($1, $2, $3, $4, $5, $6, $7 )',
+    [coin, date, price, mount, amount, fees, userId]
   );
   return purchase.rows;
 };

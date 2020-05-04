@@ -67,7 +67,7 @@ function Dashboard() {
                     path="/portefeuille"
                     component={() => (
                       <FormAddAction
-                        onSubmitForm={getPurchases(currentUser.id)}
+                      // onSubmitForm={getPurchases(currentUser.id)}
                       />
                     )}
                   />

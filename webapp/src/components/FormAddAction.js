@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card, Form, Input, Select, Image } from 'semantic-ui-react';
 import { ButtonPrimary } from '../styles/Button';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import { toast } from 'react-toastify';
+import contextUser from '../context/contextUser';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -20,6 +21,8 @@ import xlm from '../assets/svg/xlm.svg';
 import bat from '../assets/svg/bat.svg';
 
 function FormAddAction({ onSubmitForm }) {
+  const { currentUser } = useContext(contextUser);
+
   const [date, setDate] = useState();
   const [name, setName] = useState('');
   const [amountCrypto, setAmountCrypto] = useState('');
@@ -62,6 +65,7 @@ function FormAddAction({ onSubmitForm }) {
           amountEuro,
           amountCrypto,
           fees,
+          currentUser,
         })
         .then(function (res) {
           toast.success(<Greet />);
