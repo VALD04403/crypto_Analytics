@@ -11,21 +11,26 @@ function CardWallet() {
   const [fees, setFees] = useState();
   const [totalWithFees, setTotalWithFees] = useState();
   const [loading, setLoading] = useState(true);
+  const [noData, setNoData] = useState(false);
 
   const { currentUser } = useContext(contextUser);
 
   const getGeneralData = async () => {
-    const data = await fetch('/api/info');
+    const data = await fetch(`/api/info${currentUser.id}`);
     await data.json().then((res) => {
-      res.data.map((info) => {
-        setTotal(Number(info.total_invest).toFixed(2));
-        setFees(Number(info.total_fees).toFixed(2));
-        setTotalWithFees(
-          (Number(info.total_invest) + Number(info.total_fees)).toFixed(2)
-        );
-        return (totalSpend =
-          Number(info.total_invest) + Number(info.total_fees));
-      });
+      if (res.data.length > 0) {
+        res.data.map((info) => {
+          setTotal(Number(info.total_invest).toFixed(2));
+          setFees(Number(info.total_fees).toFixed(2));
+          setTotalWithFees(
+            (Number(info.total_invest) + Number(info.total_fees)).toFixed(2)
+          );
+          return (totalSpend =
+            Number(info.total_invest) + Number(info.total_fees));
+        });
+      } else {
+        setNoData(true);
+      }
     });
   };
 
@@ -35,48 +40,54 @@ function CardWallet() {
     const totalAmountByCoin = [];
     const total = [];
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    const purschases = await fetch(`/api/purchases/${id}`);
-    purschases.json().then((res) => {
-      res.purchases.map((item) => {
-        if (listItems.indexOf(item.coin_name) === -1) {
-          const coin = {
-            name: item.coin_name,
-            purchases: [],
-          };
-          orderItems.push(coin);
-          listItems.push(item.coin_name);
-        }
-        orderItems.map((purchase) => {
-          if (purchase.name === item.coin_name) {
-            purchase.purchases.push(item);
+    const purchases = await fetch(`/api/purchases/${id}`);
+    purchases.json().then((res) => {
+      if (res.purchases.length > 0) {
+        res.purchases.map((item) => {
+          if (listItems.indexOf(item.coin_name) === -1) {
+            const coin = {
+              name: item.coin_name,
+              purchases: [],
+            };
+            orderItems.push(coin);
+            listItems.push(item.coin_name);
           }
+          orderItems.map((purchase) => {
+            if (purchase.name === item.coin_name) {
+              purchase.purchases.push(item);
+            }
+          });
         });
-      });
-
-      orderItems.map((item) => {
-        const amount = item.purchases.reduce(function (res, item) {
-          return res + parseFloat(item.amount_coin);
-        }, 0);
-        totalAmountByCoin.push({ name: item.name, amount: amount });
-      });
-
-      const getTotalValue = totalAmountByCoin.map(async (item) => {
-        const value = await fetch(`/api/value/${item.name}`, {
-          headers: { 'Content-Type': 'application/json' },
-          method: 'GET',
+      }
+      if (orderItems.length > 0) {
+        orderItems.map((item) => {
+          const amount = item.purchases.reduce(function (res, item) {
+            return res + parseFloat(item.amount_coin);
+          }, 0);
+          totalAmountByCoin.push({ name: item.name, amount: amount });
         });
-        return await value.json().then((res) => {
-          total.push(res.response * item.amount);
-        });
-      });
 
-      Promise.all(getTotalValue).then(() => {
-        setWalletValue(total.reduce(reducer));
-        const calculPercent = (totalSpend * 100) / total.reduce(reducer);
-        setPercent((100 - Number(calculPercent)).toFixed(2));
-        setDifferenceValue((total.reduce(reducer) - totalSpend).toFixed(2));
+        const getTotalValue = totalAmountByCoin.map(async (item) => {
+          const value = await fetch(`/api/value/${item.name}`, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'GET',
+          });
+          return await value.json().then((res) => {
+            total.push(res.response * item.amount);
+          });
+        });
+
+        Promise.all(getTotalValue).then(() => {
+          setWalletValue(total.reduce(reducer));
+          const calculPercent = (totalSpend * 100) / total.reduce(reducer);
+          setPercent((100 - Number(calculPercent)).toFixed(2));
+          setDifferenceValue((total.reduce(reducer) - totalSpend).toFixed(2));
+          setLoading(false);
+        });
+      } else {
+        setNoData(true);
         setLoading(false);
-      });
+      }
     });
   };
 
@@ -94,7 +105,7 @@ function CardWallet() {
         </Header>
       </Card.Content>
       <Card.Content>
-        {!loading ? (
+        {!loading && !noData ? (
           <Grid columns={3} divided>
             <Grid.Row>
               <Grid.Column>
@@ -141,6 +152,9 @@ function CardWallet() {
             </Grid.Row>
           </Grid>
         ) : (
+          <p>Vous n'avez pas encore ajoutez de transactions.</p>
+        )}
+        {loading && (
           <Dimmer active>
             <Loader />
           </Dimmer>

@@ -50,9 +50,10 @@ const deletePurchase = async (id) => {
   return purchase;
 };
 
-const getGeneralInfo = async () => {
+const getGeneralInfo = async (userId) => {
   const data = await pool.query(
-    'SELECT total_invest, total_fees FROM general_info'
+    'SELECT total_invest, total_fees FROM general_info WHERE user_id = $1',
+    [userId]
   );
   return data.rows;
 };

@@ -50,7 +50,8 @@ const deletePurchase = async (req, res) => {
 };
 
 const getGeneralInfo = async (req, res) => {
-  const data = await dataAccess.getGeneralInfo();
+  const { id } = req.params;
+  const data = await dataAccess.getGeneralInfo(id);
   return res.status(200).json({ data });
 };
 

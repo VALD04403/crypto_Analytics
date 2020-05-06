@@ -34,6 +34,7 @@ const SubscribeForm = ({ onUserSignedIn }) => {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         body: JSON.stringify({
+          username,
           firstname,
           name,
           mail,
@@ -41,8 +42,18 @@ const SubscribeForm = ({ onUserSignedIn }) => {
         }),
       });
       if (response.ok) {
-        onUserSignedIn();
-        history.push('/accueil');
+        const login = await fetch('/api/sessions', {
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        });
+        if (login.ok) {
+          onUserSignedIn();
+          history.push('/accueil');
+        }
       }
     }
   };
