@@ -49,7 +49,6 @@ function LastAction() {
               <Table.Row>
                 <Table.HeaderCell></Table.HeaderCell>
                 <Table.HeaderCell>Volume</Table.HeaderCell>
-                <Table.HeaderCell>Montant €</Table.HeaderCell>
                 <Table.HeaderCell>Prix</Table.HeaderCell>
                 <Table.HeaderCell>Frais</Table.HeaderCell>
                 <Table.HeaderCell>Date</Table.HeaderCell>
@@ -98,13 +97,12 @@ function LastAction() {
                       {item.amount_coin}
                       {Capitalize(item.coin_name)}
                     </Table.Cell>
-                    <Table.Cell>{item.purchase_mount}€</Table.Cell>
-                    <Table.Cell>{item.purchase_price}€</Table.Cell>
-                    <Table.Cell>{item.purchase_fees}€</Table.Cell>
+                    <Table.Cell>{item.transaction_price}€</Table.Cell>
+                    <Table.Cell>{item.transaction_fees}€</Table.Cell>
                     <Table.Cell>
                       <Moment
                         format="DD/MM/YYYY"
-                        date={new Date(item.purchase_date)}
+                        date={new Date(item.transaction_date)}
                       />
                     </Table.Cell>
                   </Table.Row>

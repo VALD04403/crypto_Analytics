@@ -19,13 +19,13 @@ exports.up = async function (db) {
     CREATE EXTENSION IF NOT EXISTS pgcrypto;`);
 
   return db.runSql(`CREATE TABLE transaction(
-    transaction_id SERIAL PRIMARY KEY,
-    coin_name TEXT UNIQUE NOT NULL,
+    transaction_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    coin_name TEXT NOT NULL,
     transaction_date DATE NOT NULL,
     transaction_price INT NOT NULL,
     amount_coin INT NOT NULL,
     transaction_fees INT NOT NULL,
-    user_id INT NOT NULL
+    user_id uuid NOT NULL
   )`);
 };
 

@@ -26,18 +26,10 @@ const getPurchasesByCoin = async (coin) => {
   return purchases.rows;
 };
 
-const createPurchase = async (
-  coin,
-  date,
-  price,
-  mount,
-  amount,
-  fees,
-  userId
-) => {
+const createPurchase = async (coin, date, price, amount, fees, userId) => {
   const purchase = await pool.query(
-    'INSERT INTO transaction (coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, user_id) VALUES($1, $2, $3, $4, $5, $6, $7 )',
-    [coin, date, price, mount, amount, fees, userId]
+    'INSERT INTO transaction (coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, user_id) VALUES($1, $2, $3, $4, $5, $6 )',
+    [coin, date, price, amount, fees, userId]
   );
   return purchase.rows;
 };
@@ -90,10 +82,11 @@ const getTopList = async () => {
 
 const createUser = async (username, firstname, name, mail, password) => {
   try {
-    await pool.query(
-      `INSERT INTO users (username, firstname, lastname, mail, password) VALUES ($1, $2,$3, crypt($4, gen_salt('bf')), crypt($5, gen_salt('bf')))`,
+    const user = await pool.query(
+      `INSERT INTO users (username, firstname, lastname, mail, password) VALUES ($1, $2,$3, crypt($4, gen_salt('bf')), crypt($5, gen_salt('bf'))) RETURNING id`,
       [username, firstname, name, mail, password]
     );
+    return user.rows[0];
   } catch (error) {
     // Postgres UNIQUE VIOLATION
     if (error.code === '23505') {
@@ -140,6 +133,13 @@ const getUserFromSessionId = async (sessionId) => {
   return user;
 };
 
+const insertDataSoldInfo = async (userId) => {
+  await pool.query(
+    `INSERT INTO sold_info (user_id, total_invest, total_fees) VALUES($1, 0, 0)`,
+    [userId]
+  );
+};
+
 module.exports = {
   getPurchases,
   createPurchase,
@@ -155,4 +155,5 @@ module.exports = {
   createSession,
   getUserFromSessionId,
   deleteSession,
+  insertDataSoldInfo,
 };

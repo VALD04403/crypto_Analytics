@@ -42,7 +42,9 @@ function Purchases(props) {
     //euro dépensé
     const sumEuro = await purchases.reduce(function (res, item) {
       return (
-        res + parseFloat(item.purchase_mount) + parseFloat(item.purchase_fees)
+        res +
+        parseFloat(item.amount_coin * item.transaction_price) +
+        parseFloat(item.transaction_fees)
       );
     }, 0);
     setTotal(Math.round(sumEuro * 100) / 100);
@@ -128,7 +130,6 @@ function Purchases(props) {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Volume</Table.HeaderCell>
-                <Table.HeaderCell>Montant €</Table.HeaderCell>
                 <Table.HeaderCell>Prix</Table.HeaderCell>
                 <Table.HeaderCell>Frais</Table.HeaderCell>
                 <Table.HeaderCell>Date</Table.HeaderCell>
@@ -136,18 +137,17 @@ function Purchases(props) {
             </Table.Header>
             <Table.Body>
               {props.category.purchases.map((item) => (
-                <Table.Row key={item.purchase_id}>
+                <Table.Row key={item.transaction_id}>
                   <Table.Cell>
                     {item.amount_coin}
                     {Capitalize(item.coin_name)}
                   </Table.Cell>
-                  <Table.Cell>{item.purchase_mount}€</Table.Cell>
-                  <Table.Cell>{item.purchase_price}€</Table.Cell>
-                  <Table.Cell>{item.purchase_fees}€</Table.Cell>
+                  <Table.Cell>{item.transaction_price}€</Table.Cell>
+                  <Table.Cell>{item.transaction_fees}€</Table.Cell>
                   <Table.Cell>
                     <Moment
                       format="DD/MM/YYYY"
-                      date={new Date(item.purchase_date)}
+                      date={new Date(item.transaction_date)}
                     />
                   </Table.Cell>
                 </Table.Row>

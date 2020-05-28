@@ -19,7 +19,8 @@ exports.up = function (db) {
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     username TEXT UNIQUE NOT NULL,
     lastname TEXT NOT NULL,
-    mail TEXT NOT NULL,
+    firstname TEXT NOT NULL,
+    mail TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
   )`);
 };

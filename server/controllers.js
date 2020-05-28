@@ -14,13 +14,13 @@ const getPurchasesByCoin = async (req, res) => {
 };
 
 const createPurchase = async (req, res) => {
+  const { id } = req.user;
   try {
-    const data = await dataAccess.getGeneralInfo();
+    const data = await dataAccess.getGeneralInfo(id);
     const {
       cryptoName,
       date,
       price,
-      amountEuro,
       amountCrypto,
       fees,
       currentUser,
@@ -29,12 +29,12 @@ const createPurchase = async (req, res) => {
       cryptoName,
       date,
       price,
-      amountEuro,
       amountCrypto,
       fees,
       currentUser.id
     );
-    const updateTotal = Number(data[0].total_invest) + Number(amountEuro);
+    const updateTotal =
+      Number(data[0].total_invest) + Number(price * amountCrypto);
     const updateFees = Number(data[0].total_fees) + Number(fees);
     await dataAccess.updateGeneralInfo(updateTotal, updateFees);
   } catch (error) {
@@ -85,7 +85,14 @@ const createUser = async (req, res) => {
   try {
     const { username, firstname, name, mail } = req.body;
     const password = getCleanPassword(req.body.password);
-    await dataAccess.createUser(username, firstname, name, mail, password);
+    const response = await dataAccess.createUser(
+      username,
+      firstname,
+      name,
+      mail,
+      password
+    );
+    await dataAccess.insertDataSoldInfo(response.id);
   } catch (error) {
     if (error.isUnknown) {
       return res.sendStatus(500);

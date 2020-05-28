@@ -26,13 +26,11 @@ function FormAddAction({ onSubmitForm }) {
   const [date, setDate] = useState();
   const [name, setName] = useState('');
   const [amountCrypto, setAmountCrypto] = useState('');
-  const [amountEuro, setAmountEuro] = useState('');
   const [price, setPrice] = useState('');
   const [fees, setFees] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChangeAmountCrypto = (data) => setAmountCrypto(data);
-  const handleChangeAmountEuro = (data) => setAmountEuro(data);
   const handleChangePrice = (data) => setPrice(data);
   const handleChangeFees = (data) => setFees(data);
   const handleChangeDate = (date) => setDate(date);
@@ -52,17 +50,15 @@ function FormAddAction({ onSubmitForm }) {
       '-' +
       formDate.slice(6, 10);
     const price = form.get('price');
-    const amountEuro = form.get('amountEuro');
     const amountCrypto = form.get('amountCrypto');
     const fees = form.get('fees');
 
-    if (cryptoName && price && date && amountCrypto && amountEuro && fees) {
+    if (cryptoName && price && date && amountCrypto && fees) {
       axios
         .post('/api/purchase', {
           cryptoName,
           date,
           price,
-          amountEuro,
           amountCrypto,
           fees,
           currentUser,
@@ -222,15 +218,6 @@ function FormAddAction({ onSubmitForm }) {
               label="Montant crypto"
               control={Input}
               placeholder="Volume"
-            ></Form.Field>
-            <Form.Field
-              className={isSubmitted && !amountEuro ? 'error' : ''}
-              onChange={handleChangeAmountEuro}
-              name="amountEuro"
-              step="any"
-              label="Montant €"
-              control={Input}
-              placeholder="Montant €"
             ></Form.Field>
             <Form.Field
               className={isSubmitted && !fees ? 'error' : ''}

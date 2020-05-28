@@ -16,7 +16,7 @@ function CardWallet() {
   const { currentUser } = useContext(contextUser);
 
   const getGeneralData = async () => {
-    const data = await fetch(`/api/info${currentUser.id}`);
+    const data = await fetch(`/api/info/${currentUser.id}`);
     await data.json().then((res) => {
       if (res.data.length > 0) {
         res.data.map((info) => {
