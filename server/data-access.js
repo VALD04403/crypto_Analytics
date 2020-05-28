@@ -12,7 +12,7 @@ const pool = new pg.Pool({
 
 const getPurchases = async (id) => {
   const purchases = await pool.query(
-    'SELECT * FROM purchase WHERE user_id = $1 order by purchase_date DESC',
+    'SELECT * FROM transaction WHERE user_id = $1 order by transaction_date DESC',
     [id]
   );
   return purchases.rows;
@@ -20,7 +20,7 @@ const getPurchases = async (id) => {
 
 const getPurchasesByCoin = async (coin) => {
   const purchases = await pool.query(
-    'SELECT * FROM purchase WHERE coin_name = $1 order by purchase_date DESC',
+    'SELECT * FROM transaction WHERE coin_name = $1 order by transaction_date DESC',
     [coin]
   );
   return purchases.rows;
@@ -36,7 +36,7 @@ const createPurchase = async (
   userId
 ) => {
   const purchase = await pool.query(
-    'INSERT INTO purchase (coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees, user_id) VALUES($1, $2, $3, $4, $5, $6, $7 )',
+    'INSERT INTO transaction (coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, user_id) VALUES($1, $2, $3, $4, $5, $6, $7 )',
     [coin, date, price, mount, amount, fees, userId]
   );
   return purchase.rows;
@@ -44,7 +44,7 @@ const createPurchase = async (
 
 const deletePurchase = async (id) => {
   const purchase = await pool.query(
-    'DELETE FROM purchase WHERE purchase_id = $1',
+    'DELETE FROM transaction WHERE transaction_id = $1',
     [id]
   );
   return purchase;
@@ -52,7 +52,7 @@ const deletePurchase = async (id) => {
 
 const getGeneralInfo = async (userId) => {
   const data = await pool.query(
-    'SELECT total_invest, total_fees FROM general_info WHERE user_id = $1',
+    'SELECT total_invest, total_fees FROM sold_info WHERE user_id = $1',
     [userId]
   );
   return data.rows;
@@ -60,7 +60,7 @@ const getGeneralInfo = async (userId) => {
 
 const updateGeneralInfo = async (total, fees) => {
   const info = await pool.query(
-    `UPDATE general_info SET total_invest = $1, total_fees = $2`,
+    `UPDATE sold_info SET total_invest = $1, total_fees = $2`,
     [total, fees]
   );
   return info.rows;
@@ -68,7 +68,7 @@ const updateGeneralInfo = async (total, fees) => {
 
 const getLast5Purchase = async (id) => {
   const top5 = await pool.query(
-    ' SELECT coin_name, purchase_date, purchase_price, purchase_mount, amount_coin, purchase_fees, purchase_id FROM purchase WHERE user_id = $1 ORDER BY purchase_date DESC LIMIT 5 OFFSET 0',
+    ' SELECT coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, transaction_id FROM transaction WHERE user_id = $1 ORDER BY transaction_date DESC LIMIT 5 OFFSET 0',
     [id]
   );
   return top5.rows;
@@ -91,7 +91,7 @@ const getTopList = async () => {
 const createUser = async (username, firstname, name, mail, password) => {
   try {
     await pool.query(
-      `INSERT INTO users (username,firstname, name, mail, password) VALUES ($1, $2,$3, crypt($4, gen_salt('bf')), crypt($5, gen_salt('bf')))`,
+      `INSERT INTO users (username, firstname, lastname, mail, password) VALUES ($1, $2,$3, crypt($4, gen_salt('bf')), crypt($5, gen_salt('bf')))`,
       [username, firstname, name, mail, password]
     );
   } catch (error) {
