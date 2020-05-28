@@ -17,8 +17,8 @@ exports.setup = function (options, seedLink) {
 exports.up = function (db) {
   return db.runSql(`CREATE TABLE sold_info(
     user_id uuid,
-    total_invest INT, 
-    total_fees INT,
+    total_invest NUMERIC, 
+    total_fees NUMERIC,
     FOREIGN KEY (user_id) REFERENCES users (id)
   )`);
 };

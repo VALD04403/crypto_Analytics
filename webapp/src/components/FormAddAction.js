@@ -220,15 +220,6 @@ function FormAddAction({ onSubmitForm }) {
               placeholder="Volume"
             ></Form.Field>
             <Form.Field
-              className={isSubmitted && !fees ? 'error' : ''}
-              onChange={handleChangeFees}
-              name="fees"
-              step="any"
-              label="Frais"
-              control={Input}
-              placeholder="Frais €"
-            ></Form.Field>
-            <Form.Field
               className={isSubmitted && !price ? 'error' : ''}
               onChange={handleChangePrice}
               name="price"
@@ -236,6 +227,15 @@ function FormAddAction({ onSubmitForm }) {
               label="Prix"
               control={Input}
               placeholder="Prix €"
+            ></Form.Field>
+            <Form.Field
+              className={isSubmitted && !fees ? 'error' : ''}
+              onChange={handleChangeFees}
+              name="fees"
+              step="any"
+              label="Frais"
+              control={Input}
+              placeholder="Frais €"
             ></Form.Field>
             <Form.Field className={isSubmitted && !date ? 'error' : ''}>
               <label>Date d'achat</label>

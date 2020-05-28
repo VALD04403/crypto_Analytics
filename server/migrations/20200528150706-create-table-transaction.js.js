@@ -22,9 +22,9 @@ exports.up = async function (db) {
     transaction_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     coin_name TEXT NOT NULL,
     transaction_date DATE NOT NULL,
-    transaction_price INT NOT NULL,
-    amount_coin INT NOT NULL,
-    transaction_fees INT NOT NULL,
+    transaction_price NUMERIC NOT NULL,
+    amount_coin NUMERIC NOT NULL,
+    transaction_fees NUMERIC NOT NULL,
     user_id uuid NOT NULL
   )`);
 };
