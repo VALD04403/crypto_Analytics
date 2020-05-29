@@ -1,5 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Card, Image, Table, Header, Dimmer, Loader } from 'semantic-ui-react';
+import {
+  Card,
+  Image,
+  Table,
+  Header,
+  Dimmer,
+  Loader,
+  Button,
+} from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 import btc from '../assets/svg/btc.svg';
 import eth from '../assets/svg/eth.svg';
@@ -40,6 +49,8 @@ function Prices() {
                   ></Table.HeaderCell>
                   <Table.HeaderCell>Nom</Table.HeaderCell>
                   <Table.HeaderCell>Prix</Table.HeaderCell>
+                  <Table.HeaderCell>Variation</Table.HeaderCell>
+                  <Table.HeaderCell>Ajouter</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -77,14 +88,43 @@ function Prices() {
                           }
                         />
                       </Table.Cell>
-                      <Table.Cell>
-                        <Header as="h3">{item.CoinInfo.FullName}</Header>
-                        <div>{item.CoinInfo.Name}</div>
+                      <Table.Cell style={{ display: 'flex' }}>
+                        <Header style={{ marginTop: '10px' }} as="h3">
+                          {item.CoinInfo.FullName}
+                        </Header>
+                        <div style={{ marginLeft: '15px', marginTop: '13px' }}>
+                          {item.CoinInfo.Name}
+                        </div>
                       </Table.Cell>
                       <Table.Cell>
                         <Header style={{ fontWeight: '200' }} as="h3">
-                          {item.RAW.EUR.PRICE} €
+                          {Math.round(item.RAW.EUR.PRICE * 100) / 100} €
                         </Header>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Header
+                          style={{ fontWeight: '200' }}
+                          as="h3"
+                          color={
+                            item.RAW.EUR.CHANGEPCT24HOUR > 0 ? 'green' : 'red'
+                          }
+                        >
+                          {item.RAW.EUR.CHANGEPCT24HOUR > 0 && '+'}{' '}
+                          {Math.round(item.RAW.EUR.CHANGEPCT24HOUR * 100) / 100}{' '}
+                          %
+                        </Header>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          style={{
+                            backgroundColor: '#1652F0',
+                            color: '#fff',
+                          }}
+                          as={Link}
+                          to="/portefeuille"
+                        >
+                          Ajouter
+                        </Button>
                       </Table.Cell>
                     </Table.Row>
                   ))}

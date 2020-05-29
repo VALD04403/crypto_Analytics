@@ -1,6 +1,15 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Card, Grid, Header, Divider, Dimmer, Loader } from 'semantic-ui-react';
+import React, { useEffect, useState, useContext, Fragment } from 'react';
+import {
+  Card,
+  Grid,
+  Header,
+  Divider,
+  Dimmer,
+  Loader,
+  Button,
+} from 'semantic-ui-react';
 import contextUser from '../context/contextUser';
+import { Link } from 'react-router-dom';
 
 function CardWallet() {
   let totalSpend = 0;
@@ -152,7 +161,19 @@ function CardWallet() {
             </Grid.Row>
           </Grid>
         ) : (
-          <p>Vous n'avez pas encore ajoutez de transactions.</p>
+          <Fragment>
+            <p style={{ marginTop: '15px' }}>
+              Vous n'avez pas encore ajoutez de transactions.
+            </p>
+            <Button
+              style={{ marginTop: '15px', marginBottom: '10px' }}
+              as={Link}
+              to="/portefeuille"
+              basic
+            >
+              Ajouter ma première tansaction
+            </Button>
+          </Fragment>
         )}
         {loading && (
           <Dimmer active>

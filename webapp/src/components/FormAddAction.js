@@ -251,7 +251,6 @@ function FormAddAction({ onSubmitForm }) {
               type="date"
               className={isSubmitted && !date ? 'error' : ''}
               label="Date de la transaction"
-              style={{ width: '100%' }}
             >
               <DatePicker
                 placeholderText="Date"
@@ -263,12 +262,12 @@ function FormAddAction({ onSubmitForm }) {
             </Form.Field>
             <Checkbox
               onChange={handleChangeStaking}
-              style={{ marginTop: '10px', display: 'inline' }}
+              style={{ marginTop: '10px', display: 'flex' }}
               label="Récompense staking"
             />
             <Checkbox
               onChange={handleChangeFree}
-              style={{ marginTop: '15px', display: 'inline' }}
+              style={{ marginTop: '15px', display: 'flex' }}
               label="Transaction en votre faveur"
             />
             <ButtonPrimary id="button-end-page" type="submit">

@@ -58,7 +58,7 @@ function LastAction() {
               <Table.Body>
                 {top5 &&
                   top5.map((item) => (
-                    <Table.Row key={item.purchase_id}>
+                    <Table.Row key={item.transaction_id}>
                       <Table.Cell>
                         <Image
                           floated="left"
@@ -112,7 +112,7 @@ function LastAction() {
             </Table>
           </Card.Content>
           <Card.Content extra>
-            <Button as={Link} to="/portefeuille" basic color="blue">
+            <Button as={Link} to="/portefeuille" basic>
               Voir plus
             </Button>
           </Card.Content>
