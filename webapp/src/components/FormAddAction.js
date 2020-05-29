@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Card, Form, Input, Select, Image } from 'semantic-ui-react';
+import { Card, Form, Input, Select, Image, Checkbox } from 'semantic-ui-react';
 import { ButtonPrimary } from '../styles/Button';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
@@ -29,11 +29,15 @@ function FormAddAction({ onSubmitForm }) {
   const [price, setPrice] = useState('');
   const [fees, setFees] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [staking, setStaking] = useState(false);
+  const [isFree, setIsFree] = useState(false);
 
   const handleChangeAmountCrypto = (data) => setAmountCrypto(data);
   const handleChangePrice = (data) => setPrice(data);
   const handleChangeFees = (data) => setFees(data);
-  const handleChangeDate = (date) => setDate(date);
+  const handleChangeDate = (data) => setDate(data);
+  const handleChangeStaking = () => setStaking(!staking);
+  const handleChangeFree = () => setIsFree(!isFree);
   const handleChangeName = (e, { value }) => setName(value);
 
   const Greet = () => <div>Échange ajouté !</div>;
@@ -61,6 +65,8 @@ function FormAddAction({ onSubmitForm }) {
           price,
           amountCrypto,
           fees,
+          staking,
+          isFree,
           currentUser,
         })
         .then(function (res) {
@@ -194,10 +200,10 @@ function FormAddAction({ onSubmitForm }) {
   return (
     <Card style={{ marginTop: '1em' }}>
       <Card.Content>
-        <Card.Header>Ajouter un échange</Card.Header>
+        <Card.Header>Ajouter une transaction</Card.Header>
       </Card.Content>
       <Card.Content>
-        <Card.Meta style={{ marginTop: '20px' }}>
+        <Card.Meta style={{ marginTop: '10px' }}>
           <Form id="coin-form" onSubmit={submit}>
             <Form.Field className={isSubmitted && !name ? 'error' : ''}>
               <label>Cryptomonnaie</label>
@@ -215,7 +221,8 @@ function FormAddAction({ onSubmitForm }) {
               onChange={handleChangeAmountCrypto}
               name="amountCrypto"
               step="any"
-              label="Montant crypto"
+              label="Volume crypto"
+              type="number"
               control={Input}
               placeholder="Volume"
             ></Form.Field>
@@ -225,6 +232,7 @@ function FormAddAction({ onSubmitForm }) {
               name="price"
               step="any"
               label="Prix"
+              type="number"
               control={Input}
               placeholder="Prix €"
             ></Form.Field>
@@ -234,11 +242,17 @@ function FormAddAction({ onSubmitForm }) {
               name="fees"
               step="any"
               label="Frais"
+              type="number"
               control={Input}
               placeholder="Frais €"
             ></Form.Field>
-            <Form.Field className={isSubmitted && !date ? 'error' : ''}>
-              <label>Date d'achat</label>
+            <Form.Field
+              control={Input}
+              type="date"
+              className={isSubmitted && !date ? 'error' : ''}
+              label="Date de la transaction"
+              style={{ width: '100%' }}
+            >
               <DatePicker
                 placeholderText="Date"
                 name="date"
@@ -247,6 +261,16 @@ function FormAddAction({ onSubmitForm }) {
                 onChange={handleChangeDate}
               />
             </Form.Field>
+            <Checkbox
+              onChange={handleChangeStaking}
+              style={{ marginTop: '10px', display: 'inline' }}
+              label="Récompense staking"
+            />
+            <Checkbox
+              onChange={handleChangeFree}
+              style={{ marginTop: '15px', display: 'inline' }}
+              label="Transaction en votre faveur"
+            />
             <ButtonPrimary id="button-end-page" type="submit">
               Ajouter
             </ButtonPrimary>

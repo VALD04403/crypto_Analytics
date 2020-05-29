@@ -25,6 +25,8 @@ exports.up = async function (db) {
     transaction_price NUMERIC NOT NULL,
     amount_coin NUMERIC NOT NULL,
     transaction_fees NUMERIC NOT NULL,
+    staking TEXT NOT NULL,
+    transaction_free TEXT NOT NULL,
     user_id uuid NOT NULL
   )`);
 };

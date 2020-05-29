@@ -12,7 +12,7 @@ const pool = new pg.Pool({
 
 const getPurchases = async (id) => {
   const purchases = await pool.query(
-    'SELECT * FROM transaction WHERE user_id = $1 order by transaction_date DESC',
+    'SELECT coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, staking, transaction_free, user_id FROM transaction WHERE user_id = $1 order by transaction_date DESC',
     [id]
   );
   return purchases.rows;
@@ -26,10 +26,19 @@ const getPurchasesByCoin = async (coin) => {
   return purchases.rows;
 };
 
-const createPurchase = async (coin, date, price, amount, fees, userId) => {
+const createPurchase = async (
+  coin,
+  date,
+  price,
+  amount,
+  fees,
+  staking,
+  isFree,
+  userId
+) => {
   const purchase = await pool.query(
-    'INSERT INTO transaction (coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, user_id) VALUES($1, $2, $3, $4, $5, $6 )',
-    [coin, date, price, amount, fees, userId]
+    'INSERT INTO transaction (coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, staking, transaction_free, user_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8 )',
+    [coin, date, price, amount, fees, staking, isFree, userId]
   );
   return purchase.rows;
 };

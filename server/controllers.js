@@ -23,6 +23,8 @@ const createPurchase = async (req, res) => {
       price,
       amountCrypto,
       fees,
+      staking,
+      isFree,
       currentUser,
     } = req.body;
     await dataAccess.createPurchase(
@@ -31,6 +33,8 @@ const createPurchase = async (req, res) => {
       price,
       amountCrypto,
       fees,
+      staking,
+      isFree,
       currentUser.id
     );
     const updateTotal =
