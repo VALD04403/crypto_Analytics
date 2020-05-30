@@ -5,6 +5,7 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import { toast } from 'react-toastify';
 import contextUser from '../context/contextUser';
+import '../styles/Form.css';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -258,6 +259,7 @@ function FormAddAction({ onSubmitForm }) {
               label="Date de la transaction"
             >
               <DatePicker
+                className="datePicker"
                 placeholderText="Date"
                 name="date"
                 dateFormat="dd/MM/yyyy"
