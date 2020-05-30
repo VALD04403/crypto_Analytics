@@ -75,6 +75,11 @@ function FormAddAction({ onSubmitForm }) {
           document.getElementById('coin-form').reset();
           setName(null);
           setDate(null);
+          setAmountCrypto(null);
+          setFees(null);
+          setPrice(null);
+          setIsFree(false);
+          setStaking(false);
           onSubmitForm();
         })
         .catch(function (error) {
@@ -262,11 +267,13 @@ function FormAddAction({ onSubmitForm }) {
             </Form.Field>
             <Checkbox
               onChange={handleChangeStaking}
+              checked={staking}
               style={{ marginTop: '10px', display: 'flex' }}
               label="Récompense staking"
             />
             <Checkbox
               onChange={handleChangeFree}
+              checked={isFree}
               style={{ marginTop: '15px', display: 'flex' }}
               label="Transaction en votre faveur"
             />

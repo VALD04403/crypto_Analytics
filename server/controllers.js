@@ -37,10 +37,12 @@ const createPurchase = async (req, res) => {
       isFree,
       currentUser.id
     );
-    const updateTotal =
-      Number(data[0].total_invest) + Number(price * amountCrypto);
-    const updateFees = Number(data[0].total_fees) + Number(fees);
-    await dataAccess.updateGeneralInfo(updateTotal, updateFees);
+    if (!isFree && !staking) {
+      const updateTotal =
+        Number(data[0].total_invest) + Number(price * amountCrypto);
+      const updateFees = Number(data[0].total_fees) + Number(fees);
+      await dataAccess.updateGeneralInfo(updateTotal, updateFees);
+    }
   } catch (error) {
     return res.status(400).send({ errorMessage: error.message });
   }
