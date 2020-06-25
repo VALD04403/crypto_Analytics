@@ -2,8 +2,8 @@ const dataAccess = require('./data-access');
 
 //crypto
 const getPurchases = async (req, res) => {
-  const { id } = req.params;
-  const purchases = await dataAccess.getPurchases(id);
+  const { userId } = req.params;
+  const purchases = await dataAccess.getPurchases(userId);
   return res.status(200).json({ purchases });
 };
 

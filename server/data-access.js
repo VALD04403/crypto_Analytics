@@ -10,10 +10,10 @@ const pool = new pg.Pool({
 
 //crypto
 
-const getPurchases = async (id) => {
+const getPurchases = async (userId) => {
   const purchases = await pool.query(
     'SELECT transaction_id,coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, staking, transaction_free, user_id FROM transaction WHERE user_id = $1 order by transaction_date DESC',
-    [id]
+    [userId]
   );
   return purchases.rows;
 };

@@ -90,7 +90,7 @@ function FormAddAction({ onSubmitForm }) {
   };
 
   const cryptoOptions = [
-    { key: '', value: '', text: 'Choisissez votre cryptomonnaie' },
+    { key: '', value: '', text: 'Cryptomonnaie' },
     {
       key: 'btc',
       value: 'btc',

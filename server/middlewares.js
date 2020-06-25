@@ -23,4 +23,18 @@ const allowAuthenticatedUserOnly = (req, res, next) => {
   }
 };
 
-module.exports = { setUser, allowAuthenticatedUserOnly };
+const allowPermissionOnPurchases = (req, res, next) => {
+  const { userId } = req.params;
+  const { user } = req;
+  if (userId === user.id) {
+    next();
+  } else {
+    res.sendStatus(401);
+  }
+};
+
+module.exports = {
+  setUser,
+  allowAuthenticatedUserOnly,
+  allowPermissionOnPurchases,
+};
