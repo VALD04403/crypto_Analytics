@@ -87,6 +87,12 @@ const getTopList = async () => {
   return list;
 };
 
+const getNewsArticles = async () => {
+  const url = `https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=${apiKey}`;
+  const list = await await fetch(url).json();
+  return list;
+};
+
 // user
 
 const createUser = async (username, firstname, name, mail, password) => {
@@ -159,6 +165,7 @@ module.exports = {
   getLast5Purchase,
   updateGeneralInfo,
   getTopList,
+  getNewsArticles,
   createUser,
   getVerifiedUserId,
   createSession,

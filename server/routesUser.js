@@ -6,9 +6,7 @@ const { allowPermissionOnPurchases } = require('./middlewares');
 
 router.use(allowPermissionOnPurchases);
 
-router.get('/list', controllers.getPurchases);
-router.get('/:coinName', controllers.getPurchasesByCoin);
-router.delete('/delete/:purchaseId', controllers.deletePurchase);
-router.post('/addPurchase', controllers.createPurchase);
+router.get('/info', controllers.getGeneralInfo);
+router.get('/top5', controllers.getLast5Purchase);
 
 module.exports = router;

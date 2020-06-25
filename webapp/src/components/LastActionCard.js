@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react';
-import { Card, Image, Table, Button, Header } from 'semantic-ui-react';
+import { Card, Image, Table, Button, Header, Icon } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 import contextUser from '../context/contextUser';
@@ -15,13 +15,15 @@ import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
 import bat from '../assets/svg/bat.svg';
+import link from '../assets/svg/link.svg';
+import bsv from '../assets/svg/bsv.svg';
 
 function LastAction() {
   const { currentUser } = useContext(contextUser);
   const [top5, setTop5] = useState();
 
   const getTop5 = async (id) => {
-    const data = await fetch(`/api/top5/${id}`);
+    const data = await fetch(`/api/user/${id}/top5`);
     await data.json().then((res) => {
       setTop5(res.top5);
     });
@@ -41,7 +43,12 @@ function LastAction() {
         <Card style={{ width: '100%' }}>
           <Card.Content>
             <Header style={{ opacity: '0.6' }} floated="left">
-              Derniers transactions
+              <Icon name="exchange" />
+              {top5.length > 1 ? (
+                <>Dernières transactions</>
+              ) : (
+                <>Dernière transaction</>
+              )}
             </Header>
           </Card.Content>
           <Card.Content>
@@ -90,6 +97,10 @@ function LastAction() {
                               ? xlm
                               : item.coin_name === 'bat'
                               ? bat
+                              : item.coin_name === 'link'
+                              ? link
+                              : item.coin_name === 'bsv'
+                              ? bsv
                               : ''
                           }
                         ></Image>

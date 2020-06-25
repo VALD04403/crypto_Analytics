@@ -56,14 +56,14 @@ const deletePurchase = async (req, res) => {
 };
 
 const getGeneralInfo = async (req, res) => {
-  const { id } = req.params;
-  const data = await dataAccess.getGeneralInfo(id);
+  const { userId } = req.params;
+  const data = await dataAccess.getGeneralInfo(userId);
   return res.status(200).json({ data });
 };
 
 const getLast5Purchase = async (req, res) => {
-  const { id } = req.params;
-  const top5 = await dataAccess.getLast5Purchase(id);
+  const { userId } = req.params;
+  const top5 = await dataAccess.getLast5Purchase(userId);
   return res.status(200).json({ top5 });
 };
 
@@ -75,6 +75,11 @@ const getValueCoin = async (req, res) => {
 
 const getTopListValue = async (req, res) => {
   const response = await dataAccess.getTopList();
+  return res.status(200).json({ response });
+};
+
+const getNewsArticles = async (req, res) => {
+  const response = await dataAccess.getNewsArticles();
   return res.status(200).json({ response });
 };
 
@@ -143,6 +148,7 @@ module.exports = {
   getGeneralInfo,
   getLast5Purchase,
   getTopListValue,
+  getNewsArticles,
   createUser,
   createSession,
   deleteSession,

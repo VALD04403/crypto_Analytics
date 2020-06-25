@@ -1,29 +1,29 @@
 const router = require('express').Router();
 
 const controllers = require('./controllers');
+
 const { allowAuthenticatedUserOnly } = require('./middlewares');
 
 const routesPurchases = require('./routesPurchases');
+const routesUser = require('./routesUser');
 
 router.get('/', (req, res) => {
   res.json({ info: 'Node.js, Express, and Postgres API' });
 });
 
+router.use(allowAuthenticatedUserOnly);
+
 router.use('/purchases/:userId', routesPurchases);
-router.get('/purchasesByCoin', controllers.getPurchasesByCoin);
-router.post('/purchase', controllers.createPurchase);
-router.delete('/purchase', controllers.deletePurchase);
-router.get('/info/:id', controllers.getGeneralInfo);
-router.get('/top5/:id', controllers.getLast5Purchase);
+router.use('/user/:userId', routesUser);
 
 router.get('/value/:coin', controllers.getValueCoin);
 router.get('/listValue', controllers.getTopListValue);
+router.get('/newsArticles', controllers.getNewsArticles);
 
 router.post('/createUser', controllers.createUser);
-router.post('/sessions', controllers.createSession);
-router.delete('/sessions', controllers.deleteSession);
 router.get('/whoami', controllers.getCurrentUser);
 
-router.use(allowAuthenticatedUserOnly);
+router.post('/sessions', controllers.createSession);
+router.delete('/sessions', controllers.deleteSession);
 
 module.exports = router;

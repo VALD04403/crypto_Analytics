@@ -7,6 +7,7 @@ import {
   Dimmer,
   Loader,
   Button,
+  Icon,
 } from 'semantic-ui-react';
 import contextUser from '../context/contextUser';
 import { Link } from 'react-router-dom';
@@ -25,7 +26,7 @@ function CardWallet() {
   const { currentUser } = useContext(contextUser);
 
   const getGeneralData = async () => {
-    const data = await fetch(`/api/info/${currentUser.id}`);
+    const data = await fetch(`/api/user/${currentUser.id}/info`);
     await data.json().then((res) => {
       if (res.data.length > 0) {
         res.data.map((info) => {
@@ -49,7 +50,7 @@ function CardWallet() {
     const totalAmountByCoin = [];
     const total = [];
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    const purchases = await fetch(`/api/purchases/${id}`);
+    const purchases = await fetch(`/api/purchases/${id}/list`);
     purchases.json().then((res) => {
       if (res.purchases.length > 0) {
         res.purchases.map((item) => {
@@ -100,6 +101,13 @@ function CardWallet() {
     });
   };
 
+  const numberWithSpaces = (value) => {
+    var parts = value.toString().split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    parts[1] = parts[1].slice(0, 2);
+    return parts.join('.');
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     getGeneralData();
@@ -110,6 +118,7 @@ function CardWallet() {
     <Card fluid>
       <Card.Content>
         <Header style={{ opacity: '0.6' }} floated="left">
+          <Icon name="dollar" />
           Solde du portefeuille
         </Header>
       </Card.Content>
@@ -120,11 +129,11 @@ function CardWallet() {
               <Grid.Column>
                 Solde portefeuille:{' '}
                 <h2 style={{ marginTop: '5px' }}>
-                  {walletValue && walletValue.toFixed(2)} €
+                  {walletValue && numberWithSpaces(walletValue)} €
                 </h2>
               </Grid.Column>
               <Grid.Column>
-                {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille:{' '}
+                {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille: %
                 <Header
                   style={{ marginTop: '5px' }}
                   as="h2"
@@ -136,27 +145,34 @@ function CardWallet() {
               </Grid.Column>
               <Grid.Column>
                 {differenceValue > 0 ? 'Plus-value' : ' Moins-value'}{' '}
-                portefeuille:{' '}
+                portefeuille: €
                 <Header
                   style={{ marginTop: '5px' }}
                   as="h2"
                   color={differenceValue > 0 ? 'green' : 'red'}
                 >
-                  {differenceValue > 0 ? '+' : ' -'} {differenceValue} €
+                  {differenceValue > 0 ? '+' : ' -'}{' '}
+                  {numberWithSpaces(differenceValue)} €
                 </Header>
               </Grid.Column>
             </Grid.Row>
             <Divider></Divider>
             <Grid.Row>
               <Grid.Column>
-                Fond investi: <h2 style={{ marginTop: '5px' }}>{total} € </h2>
+                Fonds investis:{' '}
+                <h2 style={{ marginTop: '5px' }}>
+                  {numberWithSpaces(total)} €{' '}
+                </h2>
               </Grid.Column>
               <Grid.Column>
-                Frais: <h2 style={{ marginTop: '5px' }}>{fees} €</h2>
+                Frais:{' '}
+                <h2 style={{ marginTop: '5px' }}>{numberWithSpaces(fees)} €</h2>
               </Grid.Column>
               <Grid.Column>
-                Fond investi avec frais:{' '}
-                <h2 style={{ marginTop: '5px' }}>{totalWithFees} €</h2>
+                Fonds investis avec frais:{' '}
+                <h2 style={{ marginTop: '5px' }}>
+                  {numberWithSpaces(totalWithFees)} €
+                </h2>
               </Grid.Column>
             </Grid.Row>
           </Grid>

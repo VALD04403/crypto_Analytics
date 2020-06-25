@@ -20,6 +20,8 @@ import bch from '../assets/svg/bch.svg';
 import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
+import link from '../assets/svg/link.svg';
+import bsv from '../assets/svg/bsv.svg';
 
 function Prices() {
   const [list, setList] = useState();
@@ -84,6 +86,10 @@ function Prices() {
                               ? bch
                               : item.CoinInfo.Name === 'XLM'
                               ? xlm
+                              : item.CoinInfo.Name === 'LINK'
+                              ? link
+                              : item.CoinInfo.Name === 'BSV'
+                              ? bsv
                               : ''
                           }
                         />

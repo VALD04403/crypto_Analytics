@@ -20,6 +20,8 @@ import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
 import bat from '../assets/svg/bat.svg';
+import link from '../assets/svg/link.svg';
+import bsv from '../assets/svg/bsv.svg';
 
 function FormAddAction({ onSubmitForm }) {
   const { currentUser } = useContext(contextUser);
@@ -60,7 +62,7 @@ function FormAddAction({ onSubmitForm }) {
 
     if (cryptoName && price && date && amountCrypto && fees) {
       axios
-        .post('/api/purchase', {
+        .post(`/api/purchases/${currentUser.id}/addPurchase`, {
           cryptoName,
           date,
           price,
@@ -195,6 +197,26 @@ function FormAddAction({ onSubmitForm }) {
         <span>
           <Image style={{ width: '20px', marginRight: '10px' }} src={xlm} />{' '}
           Stellar Lumens
+        </span>
+      ),
+    },
+    {
+      key: 'link',
+      value: 'link',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={link} />{' '}
+          Chainlink
+        </span>
+      ),
+    },
+    {
+      key: 'bsv',
+      value: 'bsv',
+      text: (
+        <span>
+          <Image style={{ width: '20px', marginRight: '10px' }} src={bsv} />{' '}
+          Bitcoin SV
         </span>
       ),
     },
