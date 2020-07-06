@@ -139,7 +139,7 @@ function CardWallet() {
                   as="h2"
                   color={percent > 0 ? 'green' : 'red'}
                 >
-                  {percent > 0 ? '+' : ' -'}
+                  {percent > 0 && '+'}
                   {percent} %
                 </Header>
               </Grid.Column>
@@ -151,7 +151,7 @@ function CardWallet() {
                   as="h2"
                   color={differenceValue > 0 ? 'green' : 'red'}
                 >
-                  {differenceValue > 0 ? '+' : ' -'}{' '}
+                  {differenceValue > 0 && '+'}{' '}
                   {numberWithSpaces(differenceValue)} €
                 </Header>
               </Grid.Column>

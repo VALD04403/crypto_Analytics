@@ -20,6 +20,7 @@ function Dashboard() {
   const [articles, setArticles] = useState();
 
   const orderItems = [];
+  const articleItems = [];
   const listItems = [];
   const history = useHistory();
   const { currentUser } = useContext(contextUser);
@@ -56,22 +57,10 @@ function Dashboard() {
 
   const getNewsArticles = async () => {
     const news = await axios.get(`/api/newsArticles`);
-    console.log(news);
-    //  response.data.map((item) => {
-    //    if (listItems.indexOf(item.coin_name) === -1) {
-    //      const coin = {
-    //        name: item.coin_name,
-    //        purchases: [],
-    //      };
-    //      orderItems.push(coin);
-    //      listItems.push(item.coin_name);
-    //    }
-    //    orderItems.map((purchase) => {
-    //      if (purchase.name === item.coin_name) {
-    //        purchase.purchases.push(item);
-    //      }
-    //    });
-    //  });
+    news.data.response.Data.map((item) => {
+      articleItems.push(item);
+    });
+    setArticles(articleItems);
   };
 
   return (
@@ -83,7 +72,12 @@ function Dashboard() {
             <ToastContainer position="top-center" />
             <Route path="/accueil" component={() => <CardWallet />} />
             <Route path="/accueil" component={() => <LastAction />} />
-            <Route path="/accueil" component={() => <News />} />
+            <Route
+              path="/accueil"
+              component={() => (
+                <div>{articles && <News articles={articles} />}</div>
+              )}
+            />
             <Grid>
               <Grid.Row>
                 <Grid.Column mobile={16} tablet={6} computer={4}>

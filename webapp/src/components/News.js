@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Icon, Header } from 'semantic-ui-react';
 
-function News() {
-  const [article, setArticle] = useState();
-
+function News(props) {
   return (
     <Card style={{ width: '100%' }}>
       <Card.Content>
@@ -12,7 +10,14 @@ function News() {
           Articles
         </Header>
       </Card.Content>
-      <Card.Content></Card.Content>
+      <Card.Content>
+        {props.articles &&
+          props.articles.map((article) => (
+            <p key={article.id}>
+              <h4 style={{ cursor: 'pointer' }}>{article.title}</h4>
+            </p>
+          ))}
+      </Card.Content>
     </Card>
   );
 }

@@ -89,7 +89,7 @@ const getTopList = async () => {
 
 const getNewsArticles = async () => {
   const url = `https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=${apiKey}`;
-  const list = await await fetch(url).json();
+  const list = await (await fetch(url)).json();
   return list;
 };
 
