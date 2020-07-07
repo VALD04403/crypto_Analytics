@@ -89,8 +89,9 @@ function CardWallet() {
 
         Promise.all(getTotalValue).then(() => {
           setWalletValue(total.reduce(reducer));
-          const calculPercent = (totalSpend * 100) / total.reduce(reducer);
-          setPercent((100 - Number(calculPercent)).toFixed(2));
+          const calculPercent =
+            ((total.reduce(reducer) - totalSpend) / totalSpend) * 100;
+          setPercent(Number(calculPercent).toFixed(2));
           setDifferenceValue((total.reduce(reducer) - totalSpend).toFixed(2));
           setLoading(false);
         });
@@ -117,8 +118,8 @@ function CardWallet() {
   return (
     <Card fluid>
       <Card.Content>
-        <Header style={{ opacity: '0.6' }} floated="left">
-          <Icon name="dollar" />
+        <Header style={{ opacity: '0.6' }} floated='left'>
+          <Icon name='dollar' />
           Solde du portefeuille
         </Header>
       </Card.Content>
@@ -136,7 +137,7 @@ function CardWallet() {
                 {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille: %
                 <Header
                   style={{ marginTop: '5px' }}
-                  as="h2"
+                  as='h2'
                   color={percent > 0 ? 'green' : 'red'}
                 >
                   {percent > 0 && '+'}
@@ -148,7 +149,7 @@ function CardWallet() {
                 portefeuille: €
                 <Header
                   style={{ marginTop: '5px' }}
-                  as="h2"
+                  as='h2'
                   color={differenceValue > 0 ? 'green' : 'red'}
                 >
                   {differenceValue > 0 && '+'}{' '}
@@ -184,7 +185,7 @@ function CardWallet() {
             <Button
               style={{ marginTop: '15px', marginBottom: '10px' }}
               as={Link}
-              to="/portefeuille"
+              to='/portefeuille'
               basic
             >
               Ajouter ma première tansaction

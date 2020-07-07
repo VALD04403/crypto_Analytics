@@ -16,7 +16,7 @@ import bat from '../assets/svg/bat.svg';
 
 function Purchases(props) {
   const [value, setValue] = useState();
-  const [total, setTotal] = useState();
+  const [totalBuy, setTotalBuy] = useState();
   const [totalAmount, setTotalAmount] = useState();
   const [totalValue, setTotalValue] = useState();
   const [percent, setPercent] = useState();
@@ -47,7 +47,7 @@ function Purchases(props) {
         parseFloat(item.transaction_fees)
       );
     }, 0);
-    setTotal(Math.round(sumEuro * 100) / 100);
+    setTotalBuy(Math.round(sumEuro * 100) / 100);
 
     //valeur total
     const valueOfWallet = sumCoin * coinValue;
@@ -76,7 +76,7 @@ function Purchases(props) {
         {value ? (
           <Fragment>
             <Card.Content>
-              <Header as="h2" floated="left">
+              <Header as='h2' floated='left'>
                 <Image
                   style={{ width: '40px', height: '40px', marginRight: '10px' }}
                   src={
@@ -110,12 +110,12 @@ function Purchases(props) {
               </Header>
             </Card.Content>
             <Card.Content style={{ textAlign: 'left' }}>
-              <Header as="h4">
-                Total achété: {total} € / {totalAmount}{' '}
+              <Header as='h4'>
+                Total achété: {totalBuy} € / {totalAmount}{' '}
                 {Capitalize(props.category.name)}
               </Header>
-              <Header as="h3">Valeur actuelle: {totalValue} €</Header>
-              <Header as="h4" color={percent > 0 ? 'green' : 'red'}>
+              <Header as='h3'>Valeur actuelle: {totalValue} €</Header>
+              <Header as='h4' color={percent > 0 ? 'green' : 'red'}>
                 {percent > 0 ? 'Plus-value:' : ' Moins-value:'} {percent} %
               </Header>
             </Card.Content>
@@ -126,7 +126,7 @@ function Purchases(props) {
           </Dimmer>
         )}
         <Card.Content>
-          <Table basic="very" striped>
+          <Table basic='very' striped>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Volume</Table.HeaderCell>
@@ -146,7 +146,7 @@ function Purchases(props) {
                   <Table.Cell>{item.transaction_fees}€</Table.Cell>
                   <Table.Cell>
                     <Moment
-                      format="DD/MM/YYYY"
+                      format='DD/MM/YYYY'
                       date={new Date(item.transaction_date)}
                     />
                   </Table.Cell>

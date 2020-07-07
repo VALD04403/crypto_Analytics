@@ -23,7 +23,7 @@ function News(props) {
                 style={{ width: '30px', marginRight: '20px' }}
                 src={article.imageurl}
               />
-              <a href={article.url} target='_blank'>
+              <a id='news' href={article.url} target='_blank'>
                 {article.title} - {article.source_info.name}
               </a>
             </div>

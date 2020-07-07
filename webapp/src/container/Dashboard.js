@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Route, useHistory } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 import CardWallet from '../components/Card';
 import LastAction from '../components/LastActionCard';
 import FormAddAction from '../components/FormAddAction';
@@ -67,55 +68,51 @@ function Dashboard() {
     <div className='Dashboard'>
       <AppLayout>
         <div id='wrapper' style={{ marginTop: '90px', paddingBottom: '30px' }}>
-          <div>
-            <Navbar></Navbar>
-            <ToastContainer position='top-center' />
-            <Route path='/accueil' component={() => <CardWallet />} />
-            <Route path='/accueil' component={() => <LastAction />} />
-            <Route
-              path='/accueil'
-              component={() => (
-                <div style={{ textAlign: 'left' }}>
-                  {articles && <News articles={articles} />}
-                </div>
-              )}
-            />
-            <Grid>
-              <Grid.Row>
-                <Grid.Column mobile={16} tablet={6} computer={4}>
-                  <Route
-                    path='/portefeuille'
-                    component={() => (
-                      <FormAddAction
-                        onSubmitForm={() => {
-                          getPurchases(currentUser.id);
-                        }}
-                      />
-                    )}
-                  />
-                </Grid.Column>
-                <Grid.Column mobile={16} tablet={10} computer={12}>
-                  <Route
-                    path='/portefeuille'
-                    component={() => (
-                      <div>
-                        {items &&
-                          items.map((category) => (
-                            <Purchases
-                              key={category.name}
-                              category={category}
-                            />
-                          ))}
-                      </div>
-                    )}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
+          <Navbar />
+          <ToastContainer position='top-center' />
+          <Route path='/accueil' component={() => <CardWallet />} />
+          <Route path='/accueil' component={() => <LastAction />} />
+          <Route
+            path='/accueil'
+            component={() => (
+              <div style={{ textAlign: 'left' }}>
+                {articles && <News articles={articles} />}
+              </div>
+            )}
+          />
+          <Grid>
+            <Grid.Row>
+              <Grid.Column mobile={16} tablet={6} computer={4}>
+                <Route
+                  path='/portefeuille'
+                  component={() => (
+                    <FormAddAction
+                      onSubmitForm={() => {
+                        getPurchases(currentUser.id);
+                      }}
+                    />
+                  )}
+                />
+              </Grid.Column>
+              <Grid.Column mobile={16} tablet={10} computer={12}>
+                <Route
+                  path='/portefeuille'
+                  component={() => (
+                    <div>
+                      {items &&
+                        items.map((category) => (
+                          <Purchases key={category.name} category={category} />
+                        ))}
+                    </div>
+                  )}
+                />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
 
-            <Route path='/prix' component={() => <Prices />} />
-          </div>
+          <Route path='/prix' component={() => <Prices />} />
         </div>
+        <Footer />
       </AppLayout>
     </div>
   );

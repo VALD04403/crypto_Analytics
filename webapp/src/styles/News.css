@@ -1,11 +1,11 @@
-a {
-  cursor: 'pointer';
-  color: '#1652f0';
+#news {
+  cursor: pointer;
+  color: #1652f0 !important;
   opacity: 0.8;
   font-weight: 700;
 }
 
-a:hover {
+#news:hover {
   text-decoration: underline;
   opacity: 1;
 }

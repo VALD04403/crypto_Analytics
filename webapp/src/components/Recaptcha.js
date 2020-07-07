@@ -8,7 +8,6 @@ class RecaptchaComponent extends Component {
   }
   componentDidMount() {
     if (this.captchaDemo) {
-      console.log('started, just a second...');
       this.captchaDemo.reset();
       this.captchaDemo.execute();
     }
@@ -20,13 +19,11 @@ class RecaptchaComponent extends Component {
     }
   }
   verifyCallback(recaptchaToken) {
-    // Here you will get the final recaptchaToken!!!
     console.log(recaptchaToken, '<= your recaptcha token');
   }
   render() {
     return (
       <div>
-        {/* You can replace captchaDemo with any ref word */}
         <ReCaptcha
           ref={(el) => {
             this.captchaDemo = el;
