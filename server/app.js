@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const path = require('path');
 
 const routes = require('./routes');
 const { setUser } = require('./middlewares');
