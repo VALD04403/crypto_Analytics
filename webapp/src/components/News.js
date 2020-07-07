@@ -5,17 +5,17 @@ function News(props) {
   return (
     <Card style={{ width: '100%' }}>
       <Card.Content>
-        <Header style={{ opacity: '0.6' }} floated="left">
-          <Icon name="newspaper" />
+        <Header style={{ opacity: '0.6' }} floated='left'>
+          <Icon name='newspaper' />
           Articles
         </Header>
       </Card.Content>
       <Card.Content>
         {props.articles &&
           props.articles.map((article) => (
-            <p key={article.id}>
+            <div key={article.id}>
               <h4 style={{ cursor: 'pointer' }}>{article.title}</h4>
-            </p>
+            </div>
           ))}
       </Card.Content>
     </Card>
