@@ -116,13 +116,17 @@ const createUser = async (req, res) => {
 const createSession = async (req, res) => {
   const { username, password } = req.body;
   const userId = await dataAccess.getVerifiedUserId(username, password);
-  const sessionId = await dataAccess.createSession(userId);
-  res.cookie('sessionId', sessionId, {
-    maxAge: 999900000,
-    httpOnly: true,
-    sameSite: true,
-  });
-  return res.status(201).json({ userId });
+  if (userId) {
+    const sessionId = await dataAccess.createSession(userId);
+    res.cookie('sessionId', sessionId, {
+      maxAge: 999900000,
+      httpOnly: true,
+      sameSite: true,
+    });
+    return res.status(201).json({ userId });
+  } else {
+    return res.status(404).json('No user found');
+  }
 };
 
 const deleteSession = async (req, res) => {

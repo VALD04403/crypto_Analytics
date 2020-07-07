@@ -116,7 +116,7 @@ const getVerifiedUserId = async (username, password) => {
     'SELECT id FROM users WHERE username = $1 AND password = crypt($2, password)',
     [username, password]
   );
-  return result.rows[0].id;
+  return result.rows[0] ? result.rows[0].id : null;
 };
 
 const createSession = async (userId) => {

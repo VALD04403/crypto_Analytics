@@ -232,12 +232,12 @@ function FormAddAction({ onSubmitForm }) {
       </Card.Content>
       <Card.Content>
         <Card.Meta style={{ marginTop: '10px' }}>
-          <Form id="coin-form" onSubmit={submit}>
+          <Form id='coin-form' onSubmit={submit}>
             <Form.Field className={isSubmitted && !name ? 'error' : ''}>
               <label>Cryptomonnaie</label>
               <Select
-                name="cryptoName"
-                placeholder="Cryptomonnaie"
+                name='cryptoName'
+                placeholder='Cryptomonnaie'
                 selected={name}
                 value={name}
                 options={cryptoOptions}
@@ -247,44 +247,44 @@ function FormAddAction({ onSubmitForm }) {
             <Form.Field
               className={isSubmitted && !amountCrypto ? 'error' : ''}
               onChange={handleChangeAmountCrypto}
-              name="amountCrypto"
-              step="any"
-              label="Volume crypto"
-              type="number"
+              name='amountCrypto'
+              step='any'
+              label='Volume crypto'
+              type='number'
               control={Input}
-              placeholder="Volume"
+              placeholder='Volume'
             ></Form.Field>
             <Form.Field
               className={isSubmitted && !price ? 'error' : ''}
               onChange={handleChangePrice}
-              name="price"
-              step="any"
-              label="Prix"
-              type="number"
+              name='price'
+              step='any'
+              label='Prix'
+              type='number'
               control={Input}
-              placeholder="Prix €"
+              placeholder='Prix €'
             ></Form.Field>
             <Form.Field
               className={isSubmitted && !fees ? 'error' : ''}
               onChange={handleChangeFees}
-              name="fees"
-              step="any"
-              label="Frais"
-              type="number"
+              name='fees'
+              step='any'
+              label='Frais'
+              type='number'
               control={Input}
-              placeholder="Frais €"
+              placeholder='Frais €'
             ></Form.Field>
             <Form.Field
               control={Input}
-              type="date"
+              type='date'
               className={isSubmitted && !date ? 'error' : ''}
-              label="Date de la transaction"
+              label='Date de la transaction'
             >
               <DatePicker
-                className="datePicker"
-                placeholderText="Date"
-                name="date"
-                dateFormat="dd/MM/yyyy"
+                className='datePicker'
+                placeholderText='Date'
+                name='date'
+                dateFormat='dd/MM/yyyy'
                 selected={date}
                 onChange={handleChangeDate}
               />
@@ -293,15 +293,15 @@ function FormAddAction({ onSubmitForm }) {
               onChange={handleChangeStaking}
               checked={staking}
               style={{ marginTop: '10px', display: 'flex' }}
-              label="Récompense staking"
+              label='Récompense staking'
             />
             <Checkbox
               onChange={handleChangeFree}
               checked={isFree}
               style={{ marginTop: '15px', display: 'flex' }}
-              label="Transaction en votre faveur"
+              label='Transaction en votre faveur'
             />
-            <ButtonPrimary id="button-end-page" type="submit">
+            <ButtonPrimary id='button-end-page' type='submit'>
               Ajouter
             </ButtonPrimary>
           </Form>
