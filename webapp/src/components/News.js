@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Card, Icon, Header } from 'semantic-ui-react';
+import React from 'react';
+import { Card, Icon, Header, Image } from 'semantic-ui-react';
+import '../styles/News.css';
 
 function News(props) {
   return (
@@ -12,9 +13,19 @@ function News(props) {
       </Card.Content>
       <Card.Content>
         {props.articles &&
-          props.articles.map((article) => (
-            <div key={article.id}>
-              <h4 style={{ cursor: 'pointer' }}>{article.title}</h4>
+          props.articles.splice(0, 10).map((article) => (
+            <div
+              key={article.id}
+              style={{ marginBottom: '15px', flexDirection: 'row' }}
+            >
+              <Image
+                circular
+                style={{ width: '30px', marginRight: '20px' }}
+                src={article.imageurl}
+              />
+              <a href={article.url} target='_blank'>
+                {article.title} - {article.source_info.name}
+              </a>
             </div>
           ))}
       </Card.Content>

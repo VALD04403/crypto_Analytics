@@ -5,6 +5,8 @@ import Dashboard from './container/Dashboard';
 import AuthenticationForm from './components/AuthenticationForm';
 import contextUser from './context/contextUser';
 import SubscribeForm from './components/SubscribeForm';
+import RecaptchaComponent from './components/Recaptcha';
+import { loadReCaptcha } from 'react-recaptcha-google';
 
 function App() {
   const history = useHistory();
@@ -37,12 +39,13 @@ function App() {
   };
 
   useEffect(() => {
+    loadReCaptcha();
     getCurrentUser();
   }, []);
 
   return (
     <div
-      className="App"
+      className='App'
       style={{
         height: '100vh',
         backgroundColor:
@@ -52,18 +55,19 @@ function App() {
       }}
     >
       <contextUser.Provider value={contextValue}>
+        <RecaptchaComponent />
         {currentUser ? (
-          <Route path="/" component={() => <Dashboard />} />
+          <Route path='/' component={() => <Dashboard />} />
         ) : history.location.pathname === '/authentication' ? (
           <Route
-            path="/authentication"
+            path='/authentication'
             component={() => (
               <AuthenticationForm onUserSignedIn={getCurrentUser} />
             )}
           />
         ) : (
           <Route
-            path="/subscribe"
+            path='/subscribe'
             component={() => <SubscribeForm onUserSignedIn={getCurrentUser} />}
           />
         )}

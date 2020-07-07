@@ -64,35 +64,39 @@ function Dashboard() {
   };
 
   return (
-    <div className="Dashboard">
+    <div className='Dashboard'>
       <AppLayout>
-        <div id="wrapper" style={{ marginTop: '90px', paddingBottom: '30px' }}>
+        <div id='wrapper' style={{ marginTop: '90px', paddingBottom: '30px' }}>
           <div>
             <Navbar></Navbar>
-            <ToastContainer position="top-center" />
-            <Route path="/accueil" component={() => <CardWallet />} />
-            <Route path="/accueil" component={() => <LastAction />} />
+            <ToastContainer position='top-center' />
+            <Route path='/accueil' component={() => <CardWallet />} />
+            <Route path='/accueil' component={() => <LastAction />} />
             <Route
-              path="/accueil"
+              path='/accueil'
               component={() => (
-                <div>{articles && <News articles={articles} />}</div>
+                <div style={{ textAlign: 'left' }}>
+                  {articles && <News articles={articles} />}
+                </div>
               )}
             />
             <Grid>
               <Grid.Row>
                 <Grid.Column mobile={16} tablet={6} computer={4}>
                   <Route
-                    path="/portefeuille"
+                    path='/portefeuille'
                     component={() => (
                       <FormAddAction
-                      // onSubmitForm={getPurchases(currentUser.id)}
+                        onSubmitForm={() => {
+                          getPurchases(currentUser.id);
+                        }}
                       />
                     )}
                   />
                 </Grid.Column>
                 <Grid.Column mobile={16} tablet={10} computer={12}>
                   <Route
-                    path="/portefeuille"
+                    path='/portefeuille'
                     component={() => (
                       <div>
                         {items &&
@@ -109,7 +113,7 @@ function Dashboard() {
               </Grid.Row>
             </Grid>
 
-            <Route path="/prix" component={() => <Prices />} />
+            <Route path='/prix' component={() => <Prices />} />
           </div>
         </div>
       </AppLayout>

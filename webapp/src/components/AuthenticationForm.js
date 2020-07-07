@@ -15,12 +15,12 @@ import logo from '../assets/svg/wallet_white.svg';
 
 const AuthenticationForm = ({ onUserSignedIn }) => {
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
-  const [user, setUser] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   function handleChangeUsername(e) {
     setDisplayErrorMessage(false);
-    setUser(e.target.value);
+    setUsername(e.target.value);
   }
   function handleChangePassword(e) {
     setDisplayErrorMessage(false);
@@ -38,7 +38,7 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
-        user,
+        username,
         password,
       }),
     });
@@ -72,7 +72,7 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
           <Form id='auth-form' onSubmit={submit}>
             <Form.Field
               onChange={handleChangeUsername}
-              name='user'
+              name='username'
               placeholder="Nom d'utilisateur"
               control={Input}
             ></Form.Field>
@@ -89,7 +89,7 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
               </Message>
             )}
             <ButtonPrimary
-              disabled={user.length === 0 || password.length < 8}
+              disabled={username.length === 0 || password.length < 8}
               type='submit'
             >
               Se connecter

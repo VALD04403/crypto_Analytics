@@ -43,7 +43,7 @@ function FormAddAction({ onSubmitForm }) {
   const handleChangeFree = () => setIsFree(!isFree);
   const handleChangeName = (e, { value }) => setName(value);
 
-  const Greet = () => <div>Échange ajouté !</div>;
+  const Greet = () => <div>Transaction ajouté !</div>;
   const submit = async (event) => {
     event.preventDefault();
     setIsSubmitted(true);
@@ -226,7 +226,7 @@ function FormAddAction({ onSubmitForm }) {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <Card style={{ marginTop: '1em' }}>
+    <Card centered style={{ marginTop: '1em' }}>
       <Card.Content>
         <Card.Header>Ajouter une transaction</Card.Header>
       </Card.Content>
