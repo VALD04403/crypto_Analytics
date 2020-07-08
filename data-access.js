@@ -1,12 +1,9 @@
 const fetch = require('node-fetch');
 const pg = require('pg');
+const pool = require('./db_pool');
 
 const databaseUrl = process.env.DATABASE_URL;
 const apiKey = process.env.API_KEY_CRYPTO;
-
-const pool = new pg.Pool({
-  connectionString: databaseUrl,
-});
 
 //crypto
 

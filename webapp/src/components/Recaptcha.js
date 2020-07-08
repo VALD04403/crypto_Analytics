@@ -23,7 +23,7 @@ class RecaptchaComponent extends Component {
   }
   render() {
     return (
-      <div>
+      <div style={{ opacity: '0' }}>
         <ReCaptcha
           ref={(el) => {
             this.captchaDemo = el;
