@@ -5,7 +5,12 @@ const databaseUrl = process.env.DATABASE_URL;
 
 const pool = new pg.Pool({
   connectionString: databaseUrl,
-  ssl: { rejectUnauthorized: false },
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // <<<<<<< YOU NEED THIS
+    },
+  },
 });
 
 module.exports = pool;
