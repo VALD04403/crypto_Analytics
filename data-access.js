@@ -162,6 +162,47 @@ const insertDataSoldInfo = async (userId) => {
   );
 };
 
+//api coinbase
+const getUserFromCoinbase = async (token) => {
+  const url = `https://api.coinbase.com/v2/user`;
+  const user = await (
+    await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  ).json();
+  return user.data;
+};
+
+const getUserWallets = async (token) => {
+  const url = 'https://api.coinbase.com/v2/accounts';
+  const wallets = await (
+    await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  ).json();
+  return wallets.data;
+};
+
+const getUserTransactionsWallets = async (token, accountId) => {
+  const url = `https://api.coinbase.com/v2/accounts/${accountId}/transactions`;
+  const transactions = await (
+    await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  ).json();
+  return transactions.data;
+};
+
+const getUserBuysWallets = async (token, accountId) => {
+  const url = `https://api.coinbase.com/v2/accounts/${accountId}/buys`;
+  const buys = await (
+    await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  ).json();
+  return buys.data;
+};
+
 module.exports = {
   getPurchases,
   createPurchase,
@@ -179,4 +220,8 @@ module.exports = {
   getUserFromSessionId,
   deleteSession,
   insertDataSoldInfo,
+  getUserFromCoinbase,
+  getUserWallets,
+  getUserTransactionsWallets,
+  getUserBuysWallets,
 };

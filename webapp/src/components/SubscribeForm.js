@@ -14,6 +14,7 @@ import { LinkSubscribe } from '../styles/Item';
 import logo from '../assets/svg/wallet_white.svg';
 import fetch from 'node-fetch';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const SubscribeForm = ({ onUserSignedIn }) => {
   const [isSubmitted, setisSubmitted] = useState(false);
@@ -30,21 +31,30 @@ const SubscribeForm = ({ onUserSignedIn }) => {
   const createWithoAuth = async () => {
     const clientId = process.env.REACT_APP_COINBASE_CLIENT_ID;
     const secretClientId = process.env.REACT_APP_COINBASE_SECRET_CLIENT;
-    const url = 'https://api.coinbase.com/oauth/token';
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        grant_type: 'authorization_code',
-        code: query.get('code'),
-        client_id: clientId,
-        client_secret: secretClientId,
-        redirect_uri: 'http://localhost:3000/subscribe',
-      }),
-    });
+    const coinbaseUrl = 'https://api.coinbase.com/oauth/token';
+
+    const response = await (
+      await fetch(coinbaseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          grant_type: 'authorization_code',
+          code: query.get('code'),
+          client_id: clientId,
+          client_secret: secretClientId,
+          redirect_uri: 'http://localhost:3000/subscribe',
+        }),
+      })
+    ).json();
     console.log(response);
+
+    if (response.access_token) {
+      const url = `/api/coinbaseUser/${response.access_token}`;
+      const user = await axios.get(url);
+      console.log(user);
+    }
   };
 
   if (query.get('code')) {

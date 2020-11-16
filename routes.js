@@ -13,6 +13,13 @@ router.get('/', (req, res) => {
 
 router.post('/createUser', controllers.createUser);
 router.get('/whoami', controllers.getCurrentUser);
+router.get('/coinbaseUser/:token', controllers.getUserCoinbase);
+router.get('/coinbaseWallets/:token', controllers.getUserWallets);
+router.get(
+  '/coinbaseTransactions/:token/:accountId',
+  controllers.getUserTransactionsWallets
+);
+router.get('/coinbaseBuys/:token/:accountId', controllers.getUserBuysWallets);
 
 router.post('/sessions', controllers.createSession);
 router.delete('/sessions', controllers.deleteSession);

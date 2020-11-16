@@ -154,6 +154,35 @@ const getCurrentUser = async (req, res) => {
   return res.sendStatus(401);
 };
 
+//coinbase
+
+const getUserCoinbase = async (req, res) => {
+  const { token } = req.params;
+  const user = await dataAccess.getUserFromCoinbase(token);
+  return res.status(200).send(user);
+};
+
+const getUserWallets = async (req, res) => {
+  const { token } = req.params;
+  const wallets = await dataAccess.getUserWallets(token);
+  return res.status(200).send(wallets);
+};
+
+const getUserTransactionsWallets = async (req, res) => {
+  const { token, accountId } = req.params;
+  const transactions = await dataAccess.getUserTransactionsWallets(
+    token,
+    accountId
+  );
+  return res.status(200).send(transactions);
+};
+
+const getUserBuysWallets = async (req, res) => {
+  const { token, accountId } = req.params;
+  const buys = await dataAccess.getUserBuysWallets(token, accountId);
+  return res.status(200).send(buys);
+};
+
 module.exports = {
   getPurchases,
   getPurchasesByCoin,
@@ -168,4 +197,8 @@ module.exports = {
   createSession,
   deleteSession,
   getCurrentUser,
+  getUserCoinbase,
+  getUserWallets,
+  getUserTransactionsWallets,
+  getUserBuysWallets,
 };
