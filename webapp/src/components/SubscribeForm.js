@@ -12,12 +12,44 @@ import { ButtonPrimary } from '../styles/Button';
 import { useHistory } from 'react-router-dom';
 import { LinkSubscribe } from '../styles/Item';
 import logo from '../assets/svg/wallet_white.svg';
+import fetch from 'node-fetch';
+import { useLocation } from 'react-router-dom';
 
 const SubscribeForm = ({ onUserSignedIn }) => {
   const [isSubmitted, setisSubmitted] = useState(false);
   const [password, setPassword] = useState('');
 
   const history = useHistory();
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+  let query = useQuery();
+
+  const createWithoAuth = async () => {
+    const clientId = process.env.REACT_APP_COINBASE_CLIENT_ID;
+    const secretClientId = process.env.REACT_APP_COINBASE_SECRET_CLIENT;
+    const url = 'https://api.coinbase.com/oauth/token';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        grant_type: 'authorization_code',
+        code: query.get('code'),
+        client_id: clientId,
+        client_secret: secretClientId,
+        redirect_uri: 'http://localhost:3000/subscribe',
+      }),
+    });
+    console.log(response);
+  };
+
+  if (query.get('code')) {
+    createWithoAuth();
+  }
 
   const submit = async (event) => {
     event.preventDefault();
@@ -69,9 +101,9 @@ const SubscribeForm = ({ onUserSignedIn }) => {
         centered
         src={logo}
       />
-      <Card className="ui centered card">
+      <Card className='ui centered card'>
         <Card.Content>
-          <Header textAlign="center">
+          <Header textAlign='center'>
             <Header.Content>
               <h1 style={{ fontWeight: '200', color: '#1652F0' }}>
                 Inscription
@@ -80,43 +112,43 @@ const SubscribeForm = ({ onUserSignedIn }) => {
           </Header>
           <Form onSubmit={submit}>
             <Form.Field
-              name="username"
+              name='username'
               placeholder="Nom d'utilisateur"
               control={Input}
             ></Form.Field>
             <Form.Field
-              name="firstname"
-              placeholder="Prénom"
+              name='firstname'
+              placeholder='Prénom'
               control={Input}
             ></Form.Field>
             <Form.Field
-              name="name"
-              placeholder="Nom"
+              name='name'
+              placeholder='Nom'
               control={Input}
             ></Form.Field>
             <Form.Field
-              name="mail"
-              placeholder="Mail"
+              name='mail'
+              placeholder='Mail'
               control={Input}
             ></Form.Field>
             <Form.Field
-              type="password"
-              name="password"
-              placeholder="Mot de passe"
+              type='password'
+              name='password'
+              placeholder='Mot de passe'
               control={Input}
             ></Form.Field>
             <ButtonPrimary
               onClick={() => {
                 setisSubmitted(true);
               }}
-              type="submit"
+              type='submit'
             >
               S'inscrire
             </ButtonPrimary>
           </Form>
           {isSubmitted && password.length < 8 ? (
             <Message negative compact>
-              <p className="text">
+              <p className='text'>
                 Le mot de passe doit contenir au minimum 8 caractères.
               </p>
             </Message>

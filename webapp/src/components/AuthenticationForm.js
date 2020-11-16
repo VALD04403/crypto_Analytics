@@ -8,15 +8,20 @@ import {
   Image,
   Message,
 } from 'semantic-ui-react';
-import { ButtonPrimary } from '../styles/Button';
+import { ButtonPrimary, ButtonOutlinePrimary } from '../styles/Button';
 import { useHistory } from 'react-router-dom';
 import { LinkSubscribe } from '../styles/Item';
 import logo from '../assets/svg/wallet_white.svg';
+import coinbase from '../assets/svg/coinbase.svg';
 
 const AuthenticationForm = ({ onUserSignedIn }) => {
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const clientId = process.env.REACT_APP_COINBASE_CLIENT_ID;
+  const redirectUrl = process.env.REACT_APP_REDIRECT_URL;
+  const url = `https://www.coinbase.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUrl}&callback&scope=wallet:accounts:read`;
 
   function handleChangeUsername(e) {
     setDisplayErrorMessage(false);
@@ -53,6 +58,10 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
 
   const goToSubscribe = () => {
     history.push('/subscribe');
+  };
+
+  const redirectCoinbase = () => {
+    window.location.href = url;
   };
 
   return (
@@ -95,6 +104,13 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
               Se connecter
             </ButtonPrimary>
           </Form>
+          <ButtonOutlinePrimary
+            onClick={redirectCoinbase}
+            style={{ marginTop: '15px' }}
+          >
+            <Image src={coinbase} style={{ marginRight: '5px' }} />
+            Se connecter avec Coinbase
+          </ButtonOutlinePrimary>
         </Card.Content>
       </Card>
       <LinkSubscribe onClick={goToSubscribe}>

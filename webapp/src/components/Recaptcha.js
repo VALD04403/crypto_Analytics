@@ -32,7 +32,7 @@ class RecaptchaComponent extends Component {
           render='explicit'
           sitekey='6LcIwK4ZAAAAAIYxQImv3DMX-vxqUEZdbqqpVzuk'
           onloadCallback={this.onLoadRecaptcha}
-          verifyCallback={this.verifyCallback}
+          // verifyCallback={this.verifyCallback}
         />
       </div>
     );

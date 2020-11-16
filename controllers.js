@@ -83,6 +83,17 @@ const getNewsArticles = async (req, res) => {
   return res.status(200).json({ response });
 };
 
+getAmountWallet = async (req, res) => {
+  const { cryptoName } = req.params;
+  const response = await dataAccess.getAmountWallet(cryptoName);
+  return res.status(200).json({ response });
+};
+
+getAllAmountWallet = async (req, res) => {
+  const response = await dataAccess.getAllAmountWallet();
+  return res.status(200).json({ response });
+};
+
 //user
 
 const getCleanPassword = (password) => {

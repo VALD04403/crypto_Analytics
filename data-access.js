@@ -88,6 +88,18 @@ const getNewsArticles = async () => {
   return list;
 };
 
+getAmountWallet = async (cryptoName) => {
+  const amountWallet = await pool.query('SELECT * FROM wallet WHERE name $1', [
+    cryptoName,
+  ]);
+  return amountWallet.rows;
+};
+
+getAllAmountWallet = async () => {
+  const amountWallet = await pool.query('SELECT * FROM wallet');
+  return amountWallet.rows;
+};
+
 // user
 
 const createUser = async (username, firstname, name, mail, password) => {
