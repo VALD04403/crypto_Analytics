@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Route, useHistory } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
-import { Footer } from '../components/Footer';
 import CardWallet from '../components/Card';
 import LastAction from '../components/LastActionCard';
 import FormAddAction from '../components/FormAddAction';
@@ -29,7 +28,9 @@ function Dashboard() {
   useEffect(() => {
     getNewsArticles();
     if (history.location.pathname === '/portefeuille') {
-      getPurchases(currentUser.id);
+      !currentUser.coinbaseUser
+        ? getPurchases(currentUser.id)
+        : getCoinbaseTransactions(currentUser.id);
     } else if (history.location.pathname === '/') {
       history.push('/accueil');
     }
@@ -56,6 +57,8 @@ function Dashboard() {
     setItems(orderItems);
   };
 
+  const getCoinbaseTransactions = async (id) => {};
+
   const getNewsArticles = async () => {
     const news = await axios.get(`/api/newsArticles`);
     news.data.response.Data.map((item) => {
@@ -71,6 +74,7 @@ function Dashboard() {
           <Navbar />
           <ToastContainer position='top-center' />
           <Route path='/accueil' component={() => <CardWallet />} />
+          <Route path='/portefeuille' component={() => <CardWallet />} />
           <Route path='/accueil' component={() => <LastAction />} />
           <Route
             path='/accueil'
@@ -82,18 +86,20 @@ function Dashboard() {
           />
           <Grid>
             <Grid.Row>
-              <Grid.Column mobile={16} tablet={6} computer={4}>
-                <Route
-                  path='/portefeuille'
-                  component={() => (
-                    <FormAddAction
-                      onSubmitForm={() => {
-                        getPurchases(currentUser.id);
-                      }}
-                    />
-                  )}
-                />
-              </Grid.Column>
+              {!currentUser.coinbaseUser && (
+                <Grid.Column mobile={16} tablet={6} computer={4}>
+                  <Route
+                    path='/portefeuille'
+                    component={() => (
+                      <FormAddAction
+                        onSubmitForm={() => {
+                          getPurchases(currentUser.id);
+                        }}
+                      />
+                    )}
+                  />
+                </Grid.Column>
+              )}
               <Grid.Column mobile={16} tablet={10} computer={12}>
                 <Route
                   path='/portefeuille'
@@ -112,7 +118,6 @@ function Dashboard() {
 
           <Route path='/prix' component={() => <Prices />} />
         </div>
-        <Footer />
       </AppLayout>
     </div>
   );

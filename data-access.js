@@ -203,6 +203,31 @@ const getUserBuysWallets = async (token, accountId) => {
   return buys.data;
 };
 
+const getPriceCrypto = async (token, currency_pair) => {
+  const url = `https://api.coinbase.com/v2/prices/${currency_pair}/buy`;
+  const price = await (
+    await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  ).json();
+  return price.data;
+};
+
+const getToken = async (info) => {
+  try {
+    const url = `https://api.coinbase.com/oauth/token`;
+    const newToken = await (
+      await fetch(url, {
+        method: 'POST',
+        body: info,
+      })
+    ).json();
+    return newToken;
+  } catch (error) {
+    throw new UnknownError();
+  }
+};
+
 module.exports = {
   getPurchases,
   createPurchase,
@@ -224,4 +249,6 @@ module.exports = {
   getUserWallets,
   getUserTransactionsWallets,
   getUserBuysWallets,
+  getPriceCrypto,
+  getToken,
 };

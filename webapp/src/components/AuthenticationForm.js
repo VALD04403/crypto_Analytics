@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Card,
   Header,
@@ -9,19 +9,24 @@ import {
   Message,
 } from 'semantic-ui-react';
 import { ButtonPrimary, ButtonOutlinePrimary } from '../styles/Button';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { LinkSubscribe } from '../styles/Item';
 import logo from '../assets/svg/wallet_white.svg';
 import coinbase from '../assets/svg/coinbase.svg';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
+import contextUser from '../context/contextUser';
 
 const AuthenticationForm = ({ onUserSignedIn }) => {
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { setCurrentUser } = useContext(contextUser);
 
   const clientId = process.env.REACT_APP_COINBASE_CLIENT_ID;
+  const secretClientId = process.env.REACT_APP_COINBASE_SECRET_CLIENT;
   const redirectUrl = process.env.REACT_APP_REDIRECT_URL;
-  const url = `https://www.coinbase.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUrl}&callback&scope=wallet:accounts:read`;
+  const url = `https://www.coinbase.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUrl}&callback&scope=wallet:accounts:read,wallet:transactions:read,wallet:buys:read`;
 
   function handleChangeUsername(e) {
     setDisplayErrorMessage(false);
@@ -63,6 +68,72 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
   const redirectCoinbase = () => {
     window.location.href = url;
   };
+
+  //coinbase connexion
+
+  const cookies = new Cookies();
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+  let query = useQuery();
+
+  const createWithoAuth = async () => {
+    const coinbaseUrl = 'https://api.coinbase.com/oauth/token';
+    const coinbaseOAuth = await axios.post(coinbaseUrl, {
+      grant_type: 'authorization_code',
+      code: query.get('code'),
+      client_id: clientId,
+      client_secret: secretClientId,
+      redirect_uri: window.location + '/authentication',
+    });
+    console.log(coinbaseOAuth);
+    if (coinbaseOAuth.data.access_token) {
+      cookies.set('coinbaseToken', coinbaseOAuth.data, { path: '/' });
+      const coinbaseCookie = cookies.get('coinbaseToken');
+      console.log(coinbaseCookie);
+      getCurrentUserCoinbase();
+    }
+  };
+
+  if (query.get('code')) {
+    createWithoAuth();
+  }
+
+  const getCurrentUserCoinbase = async () => {
+    const coinbaseCookie = cookies.get('coinbaseToken');
+    console.log(coinbaseCookie);
+    const coinbaseUser = cookies.get('coinbaseUser');
+    if (!coinbaseUser && coinbaseCookie) {
+      const url = `https://api.coinbase.com/v2/user`;
+      const user = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${coinbaseCookie?.access_token}`,
+        },
+      });
+      cookies.set('coinbaseUser', user.data.data, { path: '/' });
+      console.log('notcookie', user.data.data);
+      setCurrentUser({
+        id: user.data.data.id,
+        username: user.data.data.user,
+        coinbaseUser: true,
+      });
+      history.push('/accueil');
+    } else if (coinbaseUser) {
+      console.log('hasCookie', coinbaseUser);
+      setCurrentUser({
+        id: coinbaseUser.id,
+        username: coinbaseUser.user,
+        coinbaseUser: true,
+      });
+      history.push('/accueil');
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUserCoinbase();
+  }, []);
 
   return (
     <Container>

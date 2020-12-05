@@ -12,8 +12,6 @@ import { ButtonPrimary } from '../styles/Button';
 import { useHistory } from 'react-router-dom';
 import { LinkSubscribe } from '../styles/Item';
 import logo from '../assets/svg/wallet_white.svg';
-import fetch from 'node-fetch';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const SubscribeForm = ({ onUserSignedIn }) => {
@@ -21,45 +19,6 @@ const SubscribeForm = ({ onUserSignedIn }) => {
   const [password, setPassword] = useState('');
 
   const history = useHistory();
-
-  function useQuery() {
-    return new URLSearchParams(useLocation().search);
-  }
-
-  let query = useQuery();
-
-  const createWithoAuth = async () => {
-    const clientId = process.env.REACT_APP_COINBASE_CLIENT_ID;
-    const secretClientId = process.env.REACT_APP_COINBASE_SECRET_CLIENT;
-    const coinbaseUrl = 'https://api.coinbase.com/oauth/token';
-
-    const response = await (
-      await fetch(coinbaseUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          grant_type: 'authorization_code',
-          code: query.get('code'),
-          client_id: clientId,
-          client_secret: secretClientId,
-          redirect_uri: 'http://localhost:3000/subscribe',
-        }),
-      })
-    ).json();
-    console.log(response);
-
-    if (response.access_token) {
-      const url = `/api/coinbaseUser/${response.access_token}`;
-      const user = await axios.get(url);
-      console.log(user);
-    }
-  };
-
-  if (query.get('code')) {
-    createWithoAuth();
-  }
 
   const submit = async (event) => {
     event.preventDefault();
@@ -72,25 +31,17 @@ const SubscribeForm = ({ onUserSignedIn }) => {
     const url = '/api/createUser';
     setPassword(formData.get('password'));
     if (password.length > 7) {
-      const response = await fetch(url, {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-        body: JSON.stringify({
-          username,
-          firstname,
-          name,
-          mail,
-          password,
-        }),
+      const response = await axios.post(url, {
+        username,
+        firstname,
+        name,
+        mail,
+        password,
       });
       if (response.ok) {
-        const login = await fetch('/api/sessions', {
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-          body: JSON.stringify({
-            username,
-            password,
-          }),
+        const login = await axios('/api/sessions', {
+          username,
+          password,
         });
         if (login.ok) {
           onUserSignedIn();

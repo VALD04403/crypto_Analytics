@@ -4,23 +4,32 @@ import { Container } from '../styles/Navbar';
 import { useHistory } from 'react-router-dom';
 import contextUser from '../context/contextUser';
 import '../styles/Navbar.css';
+import axios from 'axios';
 
 import wallet from '../assets/svg/wallet.svg';
+import Cookies from 'universal-cookie';
 
 function Navbar() {
   const history = useHistory();
-  const { setCurrentUser, getCurrentUser } = useContext(contextUser);
+  const { currentUser, setCurrentUser, getCurrentUser } = useContext(
+    contextUser
+  );
 
   const changePage = (e, { name }) => {
     history.push('/' + name);
   };
 
   const logOut = async () => {
-    const response = await fetch('/api/sessions', {
-      headers: { 'Content-Type': 'Application/json' },
-      method: 'DELETE',
-    });
-    if (response.ok) {
+    if (!currentUser.coinbaseUser) {
+      const response = await axios.delete('/api/sessions');
+      if (response.status === 200) {
+        setCurrentUser(null);
+        getCurrentUser();
+      }
+    } else {
+      const cookies = new Cookies();
+      cookies.remove('coinbaseUser');
+      cookies.remove('coinbaseToken');
       setCurrentUser(null);
       getCurrentUser();
     }
@@ -29,7 +38,7 @@ function Navbar() {
   return (
     <Container style={{ margin: '0rem ', zIndex: '100', position: 'fixed' }}>
       <Menu
-        icon="labeled"
+        icon='labeled'
         style={{
           height: '60px',
           zIndex: '100',
@@ -47,37 +56,37 @@ function Navbar() {
         </Menu.Item>
         <Menu.Item
           style={{ height: '50px' }}
-          name="accueil"
+          name='accueil'
           active={history.location.pathname === '/accueil'}
           onClick={changePage}
         />
         <Menu.Item
           style={{ height: '50px' }}
-          name="portefeuille"
+          name='portefeuille'
           active={history.location.pathname === '/portefeuille'}
           onClick={changePage}
         />
         <Menu.Item
           style={{ height: '50px' }}
-          name="prix"
+          name='prix'
           active={history.location.pathname === '/prix'}
           onClick={changePage}
         />
-        <Menu.Menu position="right">
+        <Menu.Menu position='right'>
           <Menu.Item
             style={{ height: '55px' }}
-            name="compte"
+            name='compte'
             active={history.location.pathname === '/compte'}
           >
-            <Dropdown icon="user circle">
+            <Dropdown icon='user circle'>
               <Dropdown.Menu>
-                <Dropdown.Item text="Profil" />
-                <Dropdown.Item text="Paramètres" />
+                <Dropdown.Item text='Profil' />
+                <Dropdown.Item text='Paramètres' />
                 <Dropdown.Divider />
                 <Dropdown.Item
-                  className="logout"
+                  className='logout'
                   onClick={logOut}
-                  text="Déconnexion"
+                  text='Déconnexion'
                 />
               </Dropdown.Menu>
             </Dropdown>

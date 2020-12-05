@@ -11,6 +11,8 @@ import {
 } from 'semantic-ui-react';
 import contextUser from '../context/contextUser';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 function CardWallet() {
   let totalSpend = 0;
@@ -109,10 +111,111 @@ function CardWallet() {
     return parts.join('.');
   };
 
+  //coinbase
+  const cookies = new Cookies();
+  const coinbaseToken = cookies.get('coinbaseToken');
+
+  const getCoinbaseInfo = async () => {
+    if (coinbaseToken) {
+      const walletTransactions = [];
+      const prices = [];
+      const wallets = await axios.get(
+        `/api/coinbase/wallets/${coinbaseToken?.access_token}`
+      );
+      if (!wallets.data) {
+        setNoData(true);
+        setLoading(false);
+      } else {
+        wallets.data.map(async (wallet) => {
+          const transactions = await axios.get(
+            `/api/coinbase/transactions/${coinbaseToken?.access_token}/${wallet.id}`
+          );
+          transactions.data.map((transaction) => {
+            transaction.type !== 'buy' &&
+              transaction.status === 'completed' &&
+              walletTransactions.push({
+                amount: transaction.amount.amount,
+                sum: transaction.native_amount.amount,
+                crypto: wallet.balance.currency,
+                fee: transaction.fee ? transaction.fee : 0,
+              });
+          });
+          const buys = await axios.get(
+            `/api/coinbase/buys/${coinbaseToken?.access_token}/${wallet.id}`
+          );
+          buys.data.map((buy) => {
+            buy.status === 'completed' &&
+              walletTransactions.push({
+                fee: buy.fee.amount,
+                sum: buy.total.amount,
+                amount: buy.amount.amount,
+                crypto: wallet.balance.currency,
+              });
+          });
+          const price = await axios.get(
+            `/api/coinbase/price/${coinbaseToken.access_token}/${wallet.balance.currency}-EUR`
+          );
+          prices.push({
+            amount: price.data.amount,
+            currency: wallet.balance.currency,
+          });
+          getCoinbaseTotalValueWallet(walletTransactions, prices);
+        });
+      }
+    }
+  };
+
+  const getCoinbaseTotalValueWallet = async (transactions, prices) => {
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    const totalAmountByCoin = [];
+    const totalValue = [];
+    const totalSum = [];
+    const totalFee = [];
+
+    const amount = transactions.reduce(function (res, item) {
+      return res + parseFloat(item.amount);
+    }, 0);
+    const fee = transactions.reduce(function (res, item) {
+      return res + parseFloat(item.fee);
+    }, 0);
+
+    // retourne uniquement les transactions de type achat
+    const onlyBuys = transactions.filter(
+      (transaction) => Math.sign(transaction.sum) === 1
+    );
+    const sum = onlyBuys.reduce(function (res, item) {
+      return res + parseFloat(item.sum);
+    }, 0);
+
+    totalAmountByCoin.push({ amount, fee, sum });
+    totalAmountByCoin.map((total, index) => {
+      totalValue.push(total.amount * Number(prices[index].amount));
+      totalFee.push(total.fee);
+      totalSum.push(total.sum);
+    });
+    setWalletValue(Number(totalValue.reduce(reducer)).toFixed(2));
+    setTotalWithFees(Number(totalSum.reduce(reducer).toFixed(2)));
+    setTotal(
+      Number(totalSum.reduce(reducer) - totalFee.reduce(reducer)).toFixed(2)
+    );
+    setFees(Number(totalFee.reduce(reducer).toFixed(2)));
+    setPercent(
+      Number(
+        ((totalValue.reduce(reducer) - totalSum.reduce(reducer)) /
+          totalSum.reduce(reducer)) *
+          100
+      ).toFixed(2)
+    );
+    setDifferenceValue(
+      (totalValue.reduce(reducer) - totalSum.reduce(reducer)).toFixed(2)
+    );
+    setLoading(false);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    getGeneralData();
-    getTotalValueWallet(currentUser.id);
+    !currentUser.coinbaseUser ? getGeneralData() : getCoinbaseInfo();
+    !currentUser.coinbaseUser && getTotalValueWallet(currentUser.id);
   }, []);
 
   return (
@@ -182,14 +285,16 @@ function CardWallet() {
             <p style={{ marginTop: '15px' }}>
               Vous n'avez pas encore ajoutez de transactions.
             </p>
-            <Button
-              style={{ marginTop: '15px', marginBottom: '10px' }}
-              as={Link}
-              to='/portefeuille'
-              basic
-            >
-              Ajouter ma première tansaction
-            </Button>
+            {!currentUser.coinbaseUser && (
+              <Button
+                style={{ marginTop: '15px', marginBottom: '10px' }}
+                as={Link}
+                to='/portefeuille'
+                basic
+              >
+                Ajouter ma première tansaction
+              </Button>
+            )}
           </Fragment>
         )}
         {loading && (

@@ -125,12 +125,13 @@ const createUser = async (req, res) => {
 };
 
 const createSession = async (req, res) => {
+  let userId;
   const { username, password } = req.body;
-  const userId = await dataAccess.getVerifiedUserId(username, password);
+  userId = await dataAccess.getVerifiedUserId(username, password);
   if (userId) {
     const sessionId = await dataAccess.createSession(userId);
     res.cookie('sessionId', sessionId, {
-      maxAge: 999900000,
+      maxAge: 2628000,
       httpOnly: true,
       sameSite: true,
     });
@@ -183,6 +184,19 @@ const getUserBuysWallets = async (req, res) => {
   return res.status(200).send(buys);
 };
 
+const getPriceCrypto = async (req, res) => {
+  const { token, currency_pair } = req.params;
+  const price = await dataAccess.getPriceCrypto(token, currency_pair);
+  return res.status(200).send(price);
+};
+
+const getToken = async (req, res) => {
+  const { info } = req.body;
+  // const { token } = req.params;
+  const newToken = await dataAccess.getToken(info);
+  return res.status(200).send(newToken);
+};
+
 module.exports = {
   getPurchases,
   getPurchasesByCoin,
@@ -201,4 +215,6 @@ module.exports = {
   getUserWallets,
   getUserTransactionsWallets,
   getUserBuysWallets,
+  getPriceCrypto,
+  getToken,
 };

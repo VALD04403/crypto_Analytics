@@ -29,12 +29,16 @@ function LastAction() {
     });
   };
 
+  const getLastTransactionsCoinbase = async (id) => {};
+
   const Capitalize = (str) => {
     return ' ' + str.toUpperCase();
   };
 
   useEffect(() => {
-    getTop5(currentUser.id);
+    !currentUser.coinbaseUser
+      ? getTop5(currentUser.id)
+      : getLastTransactionsCoinbase(currentUser.id);
   }, []);
 
   return (
@@ -42,8 +46,8 @@ function LastAction() {
       {top5?.length > 0 && (
         <Card style={{ width: '100%' }}>
           <Card.Content>
-            <Header style={{ opacity: '0.6' }} floated="left">
-              <Icon name="exchange" />
+            <Header style={{ opacity: '0.6' }} floated='left'>
+              <Icon name='exchange' />
               {top5.length > 1 ? (
                 <>Dernières transactions</>
               ) : (
@@ -52,7 +56,7 @@ function LastAction() {
             </Header>
           </Card.Content>
           <Card.Content>
-            <Table basic="very">
+            <Table basic='very'>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell></Table.HeaderCell>
@@ -68,7 +72,7 @@ function LastAction() {
                     <Table.Row key={item.transaction_id}>
                       <Table.Cell>
                         <Image
-                          floated="left"
+                          floated='left'
                           style={{
                             width: '30px',
                             height: '30px',
@@ -113,7 +117,7 @@ function LastAction() {
                       <Table.Cell>{item.transaction_fees}€</Table.Cell>
                       <Table.Cell>
                         <Moment
-                          format="DD/MM/YYYY"
+                          format='DD/MM/YYYY'
                           date={new Date(item.transaction_date)}
                         />
                       </Table.Cell>
@@ -123,7 +127,7 @@ function LastAction() {
             </Table>
           </Card.Content>
           <Card.Content extra>
-            <Button as={Link} to="/portefeuille" basic>
+            <Button as={Link} to='/portefeuille' basic>
               Voir plus
             </Button>
           </Card.Content>
