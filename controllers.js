@@ -41,7 +41,11 @@ const createPurchase = async (req, res) => {
       const updateTotal =
         Number(data[0].total_invest) + Number(price * amountCrypto);
       const updateFees = Number(data[0].total_fees) + Number(fees);
-      await dataAccess.updateGeneralInfo(updateTotal, updateFees);
+      await dataAccess.updateGeneralInfo(
+        updateTotal,
+        updateFees,
+        currentUser.id
+      );
     }
   } catch (error) {
     return res.status(400).send({ errorMessage: error.message });

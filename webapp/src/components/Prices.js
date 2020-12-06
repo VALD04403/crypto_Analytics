@@ -22,15 +22,14 @@ import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
 import link from '../assets/svg/link.svg';
 import bsv from '../assets/svg/bsv.svg';
+import axios from 'axios';
 
 function Prices() {
   const [list, setList] = useState();
 
   const getValueList = async () => {
-    const data = await fetch('/api/listValue');
-    data.json().then((res) => {
-      setList(res.response.Data);
-    });
+    const data = await axios.get('/api/listValue');
+    setList(data.data.response.Data);
   };
 
   useEffect(() => {
@@ -43,7 +42,7 @@ function Prices() {
       <Card style={{ width: '100%' }}>
         <Card.Content>
           {list ? (
-            <Table basic="very">
+            <Table basic='very'>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell
@@ -95,7 +94,7 @@ function Prices() {
                         />
                       </Table.Cell>
                       <Table.Cell style={{ display: 'flex' }}>
-                        <Header style={{ marginTop: '10px' }} as="h3">
+                        <Header style={{ marginTop: '10px' }} as='h3'>
                           {item.CoinInfo.FullName}
                         </Header>
                         <div style={{ marginLeft: '15px', marginTop: '13px' }}>
@@ -103,14 +102,14 @@ function Prices() {
                         </div>
                       </Table.Cell>
                       <Table.Cell>
-                        <Header style={{ fontWeight: '200' }} as="h3">
+                        <Header style={{ fontWeight: '200' }} as='h3'>
                           {Math.round(item.RAW.EUR.PRICE * 100) / 100} €
                         </Header>
                       </Table.Cell>
                       <Table.Cell>
                         <Header
                           style={{ fontWeight: '200' }}
-                          as="h3"
+                          as='h3'
                           color={
                             item.RAW.EUR.CHANGEPCT24HOUR > 0 ? 'green' : 'red'
                           }
@@ -127,7 +126,7 @@ function Prices() {
                             color: '#fff',
                           }}
                           as={Link}
-                          to="/portefeuille"
+                          to='/portefeuille'
                         >
                           Ajouter
                         </Button>

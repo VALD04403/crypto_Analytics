@@ -1,16 +1,20 @@
-const fetch = require('node-fetch');
 const pool = require('./db_pool');
+const axios = require('axios');
 
 const apiKey = process.env.API_KEY_CRYPTO;
 
 //crypto
 
 const getPurchases = async (userId) => {
-  const purchases = await pool.query(
-    'SELECT transaction_id,coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, staking, transaction_free, user_id FROM transaction WHERE user_id = $1 order by transaction_date DESC',
-    [userId]
-  );
-  return purchases.rows;
+  try {
+    const purchases = await pool.query(
+      'SELECT transaction_id,coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, staking, transaction_free, user_id FROM transaction WHERE user_id = $1 order by transaction_date DESC',
+      [userId]
+    );
+    return purchases.rows;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getPurchasesByCoin = async (coin) => {
@@ -31,11 +35,15 @@ const createPurchase = async (
   isFree,
   userId
 ) => {
-  const purchase = await pool.query(
-    'INSERT INTO transaction (coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, staking, transaction_free, user_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8 )',
-    [coin, date, price, amount, fees, staking, isFree, userId]
-  );
-  return purchase.rows;
+  try {
+    const purchase = await pool.query(
+      'INSERT INTO transaction (coin_name, transaction_date, transaction_price, amount_coin, transaction_fees, staking, transaction_free, user_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8 )',
+      [coin, date, price, amount, fees, staking, isFree, userId]
+    );
+    return purchase.rows;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const deletePurchase = async (id) => {
@@ -54,12 +62,16 @@ const getGeneralInfo = async (userId) => {
   return data.rows;
 };
 
-const updateGeneralInfo = async (total, fees) => {
-  const info = await pool.query(
-    `UPDATE sold_info SET total_invest = $1, total_fees = $2`,
-    [total, fees]
-  );
-  return info.rows;
+const updateGeneralInfo = async (total, fees, userId) => {
+  try {
+    const info = await pool.query(
+      `UPDATE sold_info SET total_invest = $1, total_fees = $2 WHERE user_id = $3`,
+      [total, fees, userId]
+    );
+    return info.rows;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getLast5Purchase = async (id) => {
@@ -72,20 +84,20 @@ const getLast5Purchase = async (id) => {
 
 const getValueCrypto = async (coin) => {
   const url = `http://min-api.cryptocompare.com/data/price?fsym=${coin}&tsyms=EUR&api_key=${apiKey}`;
-  const value = await (await fetch(url)).json();
-  return value.EUR;
+  const value = await axios.get(url);
+  return value.data.EUR;
 };
 
 const getTopList = async () => {
   const url = `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=20&tsym=EUR&api_key=${apiKey}`;
-  const list = await (await fetch(url)).json();
-  return list;
+  const list = await axios.get(url);
+  return list.data;
 };
 
 const getNewsArticles = async () => {
   const url = `https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=${apiKey}`;
-  const list = await (await fetch(url)).json();
-  return list;
+  const list = await axios.get(url);
+  return list.data;
 };
 
 getAmountWallet = async (cryptoName) => {
@@ -165,66 +177,51 @@ const insertDataSoldInfo = async (userId) => {
 //api coinbase
 const getUserFromCoinbase = async (token) => {
   const url = `https://api.coinbase.com/v2/user`;
-  const user = await (
-    await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-  ).json();
+  const user = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return user.data;
 };
 
 const getUserWallets = async (token) => {
   const url = 'https://api.coinbase.com/v2/accounts';
-  const wallets = await (
-    await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-  ).json();
-  return wallets.data;
+  const wallets = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return wallets.data.data;
 };
 
 const getUserTransactionsWallets = async (token, accountId) => {
   const url = `https://api.coinbase.com/v2/accounts/${accountId}/transactions`;
-  const transactions = await (
-    await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-  ).json();
-  return transactions.data;
+  const transactions = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return transactions.data.data;
 };
 
 const getUserBuysWallets = async (token, accountId) => {
   const url = `https://api.coinbase.com/v2/accounts/${accountId}/buys`;
-  const buys = await (
-    await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-  ).json();
-  return buys.data;
+  const buys = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return buys.data.data;
 };
 
 const getPriceCrypto = async (token, currency_pair) => {
   const url = `https://api.coinbase.com/v2/prices/${currency_pair}/buy`;
-  const price = await (
-    await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-  ).json();
-  return price.data;
+  const price = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return price.data.data;
 };
 
 const getToken = async (info) => {
   try {
     const url = `https://api.coinbase.com/oauth/token`;
-    const newToken = await (
-      await fetch(url, {
-        method: 'POST',
-        body: info,
-      })
-    ).json();
-    return newToken;
+    const newToken = await axios.post(url, info);
+    return newToken.data;
   } catch (error) {
-    throw new UnknownError();
+    console.log(error);
   }
 };
 

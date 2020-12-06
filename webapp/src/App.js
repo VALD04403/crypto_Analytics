@@ -34,7 +34,9 @@ function App() {
             refresh_token: coinbaseToken.refresh_token,
           },
         });
-        cookies.set('coinbaseToken', newToken);
+        cookies.set('coinbaseToken', newToken, {
+          sameSite: true,
+        });
       }
       setCurrentUser({
         id: coinbaseUser.id,

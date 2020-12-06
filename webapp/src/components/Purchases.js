@@ -13,6 +13,7 @@ import etc from '../assets/svg/etc.svg';
 import knc from '../assets/svg/knc.svg';
 import xlm from '../assets/svg/xlm.svg';
 import bat from '../assets/svg/bat.svg';
+import axios from 'axios';
 
 function Purchases(props) {
   const [value, setValue] = useState();
@@ -24,14 +25,9 @@ function Purchases(props) {
   const getInfos = async (coin, purchases) => {
     //valeur crypto
     let coinValue;
-    const response = await fetch(`/api/value/${coin}`, {
-      headers: { 'Content-Type': 'application/json' },
-      method: 'GET',
-    });
-    await response.json().then((res) => {
-      coinValue = res.response;
-      setValue(res.response);
-    });
+    const response = await axios.get(`/api/value/${coin}`);
+    coinValue = response.data.response;
+    setValue(response.data.response);
 
     //total crypto
     const sumCoin = await purchases.reduce(function (res, item) {

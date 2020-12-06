@@ -17,16 +17,15 @@ import xlm from '../assets/svg/xlm.svg';
 import bat from '../assets/svg/bat.svg';
 import link from '../assets/svg/link.svg';
 import bsv from '../assets/svg/bsv.svg';
+import axios from 'axios';
 
 function LastAction() {
   const { currentUser } = useContext(contextUser);
   const [top5, setTop5] = useState();
 
   const getTop5 = async (id) => {
-    const data = await fetch(`/api/user/${id}/top5`);
-    await data.json().then((res) => {
-      setTop5(res.top5);
-    });
+    const data = await axios.get(`/api/user/${id}/top5`);
+    setTop5(data.data.top5);
   };
 
   const getLastTransactionsCoinbase = async (id) => {};
