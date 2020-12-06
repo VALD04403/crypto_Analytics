@@ -25,6 +25,8 @@ function CardWallet() {
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
 
+  const [mobileScreen, setMobileScreen] = useState(false);
+
   const { currentUser } = useContext(contextUser);
 
   const getGeneralData = async () => {
@@ -212,7 +214,16 @@ function CardWallet() {
     setLoading(false);
   };
 
+  const windowResize = () => {
+    window.innerWidth < 768 ? setMobileScreen(true) : setMobileScreen(false);
+  };
+
   useEffect(() => {
+    windowResize();
+    function handleResize() {
+      windowResize();
+    }
+    window.addEventListener('resize', handleResize);
     window.scrollTo(0, 0);
     !currentUser.coinbaseUser ? getGeneralData() : getCoinbaseInfo();
     !currentUser.coinbaseUser && getTotalValueWallet(currentUser.id);
@@ -228,7 +239,7 @@ function CardWallet() {
       </Card.Content>
       <Card.Content>
         {!loading && !noData ? (
-          <Grid columns={3} divided>
+          <Grid stackable columns={3} divided>
             <Grid.Row>
               <Grid.Column>
                 Solde portefeuille:{' '}
@@ -260,7 +271,7 @@ function CardWallet() {
                 </Header>
               </Grid.Column>
             </Grid.Row>
-            <Divider></Divider>
+            {!mobileScreen && <Divider></Divider>}
             <Grid.Row>
               <Grid.Column>
                 Fonds investis:{' '}

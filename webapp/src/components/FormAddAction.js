@@ -226,7 +226,7 @@ function FormAddAction({ onSubmitForm }) {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <Card centered style={{ marginTop: '1em' }}>
+    <Card centered style={{ marginTop: '1em', width: '100%' }}>
       <Card.Content>
         <Card.Header>Ajouter une transaction</Card.Header>
       </Card.Content>

@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Menu, Image, Dropdown } from 'semantic-ui-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Menu, Image, Dropdown, Icon } from 'semantic-ui-react';
 import { Container } from '../styles/Navbar';
 import { useHistory } from 'react-router-dom';
 import contextUser from '../context/contextUser';
@@ -14,6 +14,7 @@ function Navbar() {
   const { currentUser, setCurrentUser, getCurrentUser } = useContext(
     contextUser
   );
+  const [mobileScreen, setMobileScreen] = useState(false);
 
   const changePage = (e, { name }) => {
     history.push('/' + name);
@@ -35,6 +36,18 @@ function Navbar() {
     }
   };
 
+  const windowResize = () => {
+    window.innerWidth < 768 ? setMobileScreen(true) : setMobileScreen(false);
+  };
+
+  useEffect(() => {
+    windowResize();
+    function handleResize() {
+      windowResize();
+    }
+    window.addEventListener('resize', handleResize);
+  }, []);
+
   return (
     <Container style={{ margin: '0rem ', zIndex: '100', position: 'fixed' }}>
       <Menu
@@ -54,43 +67,85 @@ function Navbar() {
         <Menu.Item>
           <Image src={wallet} />
         </Menu.Item>
-        <Menu.Item
-          style={{ height: '50px' }}
-          name='accueil'
-          active={history.location.pathname === '/accueil'}
-          onClick={changePage}
-        />
-        <Menu.Item
-          style={{ height: '50px' }}
-          name='portefeuille'
-          active={history.location.pathname === '/portefeuille'}
-          onClick={changePage}
-        />
-        <Menu.Item
-          style={{ height: '50px' }}
-          name='prix'
-          active={history.location.pathname === '/prix'}
-          onClick={changePage}
-        />
-        <Menu.Menu position='right'>
+        {!mobileScreen && (
           <Menu.Item
-            style={{ height: '55px' }}
-            name='compte'
-            active={history.location.pathname === '/compte'}
-          >
-            <Dropdown icon='user circle'>
-              <Dropdown.Menu>
-                <Dropdown.Item text='Profil' />
-                <Dropdown.Item text='Paramètres' />
-                <Dropdown.Divider />
-                <Dropdown.Item
-                  className='logout'
-                  onClick={logOut}
-                  text='Déconnexion'
-                />
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Item>
+            style={{ height: '50px' }}
+            name='accueil'
+            active={history.location.pathname === '/accueil'}
+            onClick={changePage}
+          />
+        )}
+        {!mobileScreen && (
+          <Menu.Item
+            style={{ height: '50px' }}
+            name='portefeuille'
+            active={history.location.pathname === '/portefeuille'}
+            onClick={changePage}
+          />
+        )}
+        {!mobileScreen && (
+          <Menu.Item
+            style={{ height: '50px' }}
+            name='prix'
+            active={history.location.pathname === '/prix'}
+            onClick={changePage}
+          />
+        )}
+
+        <Menu.Menu position='right'>
+          {!mobileScreen ? (
+            <Menu.Item
+              style={{ height: '55px' }}
+              name='compte'
+              active={history.location.pathname === '/compte'}
+            >
+              <Dropdown icon='user circle'>
+                <Dropdown.Menu>
+                  <Dropdown.Item text='Profil' />
+                  <Dropdown.Item text='Paramètres' />
+                  <Dropdown.Divider />
+                  <Dropdown.Item
+                    className='logout'
+                    onClick={logOut}
+                    text='Déconnexion'
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Item>
+          ) : (
+            <Menu.Item>
+              <Dropdown icon='bars'>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    text='Accueil'
+                    name='accueil'
+                    active={history.location.pathname === '/accueil'}
+                    onClick={changePage}
+                  />
+                  <Dropdown.Item
+                    text='Portefeuille'
+                    name='portefeuille'
+                    active={history.location.pathname === '/portefeuille'}
+                    onClick={changePage}
+                  />
+                  <Dropdown.Item
+                    text='Prix'
+                    name='prix'
+                    active={history.location.pathname === '/prix'}
+                    onClick={changePage}
+                  />
+                  <Dropdown.Divider />
+                  {/* <Dropdown.Item text='Profil' />
+                  <Dropdown.Item text='Paramètres' /> */}
+                  <Dropdown.Item
+                    className='logout'
+                    onClick={logOut}
+                    text='Déconnexion'
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Item>
+          )}
         </Menu.Menu>
       </Menu>
     </Container>
