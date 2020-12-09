@@ -73,28 +73,6 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
-  let query = useQuery();
-  if (query.get('code')) {
-    createWithoAuth();
-  }
-
-  const createWithoAuth = async () => {
-    const coinbaseOAuth = await axios.post('/api/coinbase/token', {
-      info: {
-        grant_type: 'authorization_code',
-        code: query.get('code'),
-        client_id: clientId,
-        client_secret: secretClientId,
-        redirect_uri: window.location + '/authentication',
-      },
-    });
-    if (coinbaseOAuth.data.access_token) {
-      cookies.set('coinbaseToken', coinbaseOAuth.data, {
-        sameSite: true,
-      });
-      getCurrentUserCoinbase();
-    }
-  };
 
   const getCurrentUserCoinbase = async () => {
     const coinbaseCookie = cookies.get('coinbaseToken');
@@ -124,6 +102,30 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
       history.push('/accueil');
     }
   };
+
+  const createWithoAuth = async () => {
+    const coinbaseOAuth = await axios.post('/api/coinbase/token', {
+      info: {
+        grant_type: 'authorization_code',
+        code: query.get('code'),
+        client_id: clientId,
+        client_secret: secretClientId,
+        redirect_uri: window.location + '/authentication',
+      },
+    });
+    if (coinbaseOAuth.data.access_token) {
+      cookies.set('coinbaseToken', coinbaseOAuth.data, {
+        sameSite: true,
+      });
+      getCurrentUserCoinbase();
+    }
+  };
+
+  let query = useQuery();
+
+  if (query.get('code')) {
+    createWithoAuth();
+  }
 
   useEffect(() => {
     getCurrentUserCoinbase();
