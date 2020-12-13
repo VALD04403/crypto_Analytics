@@ -26,17 +26,19 @@ function App() {
         Math.round(+new Date() / 1000) - coinbaseToken.created_at >
         coinbaseToken.expires_in
       ) {
-        const newToken = await axios.post(`/api/coinbase/token`, {
-          info: {
-            grant_type: 'refresh_token',
-            client_id: clientId,
-            client_secret: secretClientId,
-            refresh_token: coinbaseToken.refresh_token,
-          },
-        });
-        cookies.set('coinbaseToken', newToken, {
-          sameSite: true,
-        });
+        try {
+          const newToken = await axios.post(`/api/coinbase/token`, {
+            info: {
+              grant_type: 'refresh_token',
+              client_id: clientId,
+              client_secret: secretClientId,
+              refresh_token: coinbaseToken.refresh_token,
+            },
+          });
+          cookies.set('coinbaseToken', newToken, {
+            sameSite: true,
+          });
+        } catch (error) {}
       }
       setCurrentUser({
         id: coinbaseUser.id,
@@ -44,18 +46,24 @@ function App() {
         coinbaseUser: true,
       });
     } else {
-      const response = await fetch('/api/whoami');
-      if (response.ok) {
-        const _currentUser = await response.json();
-        setCurrentUser(_currentUser);
-      } else if (
-        history.location.pathname !== '/authentication' &&
-        history.location.pathname !== '/subscribe'
-      ) {
-        history.push('/authentication');
-      }
-      if (history.location.pathname === '/authentication' && response.ok) {
-        history.push('/accueil');
+      try {
+        const response = await axios.get('/api/whoami');
+        if (response.status === 200) {
+          const _currentUser = await response.data;
+          setCurrentUser(_currentUser);
+        } else if (
+          history.location.pathname === '/authentication' &&
+          response.status === 200
+        ) {
+          history.push('/accueil');
+        }
+      } catch (error) {
+        if (
+          history.location.pathname !== '/authentication' &&
+          history.location.pathname !== '/subscribe'
+        ) {
+          history.push('/authentication');
+        }
       }
     }
   };

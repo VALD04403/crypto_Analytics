@@ -68,7 +68,7 @@ function LastAction() {
               <Table.Body>
                 {top5 &&
                   top5.map((item) => (
-                    <Table.Row key={item.transaction_id}>
+                    <Table.Row className='tableClear' key={item.transaction_id}>
                       <Table.Cell>
                         <Image
                           floated='left'

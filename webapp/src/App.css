@@ -100,6 +100,6 @@ select:focus,
   width: 100%;
 }
 
-td {
+.tableClear {
   opacity: 0.6;
 }

@@ -133,7 +133,7 @@ function Purchases(props) {
             </Table.Header>
             <Table.Body>
               {props.category.purchases.map((item) => (
-                <Table.Row key={item.transaction_id}>
+                <Table.Row className='tableClear' key={item.transaction_id}>
                   <Table.Cell>
                     {item.amount_coin}
                     {Capitalize(item.coin_name)}

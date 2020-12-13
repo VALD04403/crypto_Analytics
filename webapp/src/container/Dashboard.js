@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { Grid } from 'semantic-ui-react';
 
 function Dashboard() {
-  const [items, setItems] = useState();
+  const [items, setItems] = useState([]);
   const [articles, setArticles] = useState();
 
   const orderItems = [];
@@ -26,7 +26,7 @@ function Dashboard() {
   const { currentUser } = useContext(contextUser);
 
   useEffect(() => {
-    getNewsArticles();
+    history.location.pathname === '/accueil' && getNewsArticles();
     if (history.location.pathname === '/portefeuille') {
       !currentUser.coinbaseUser
         ? getPurchases(currentUser.id)
@@ -84,10 +84,14 @@ function Dashboard() {
               </div>
             )}
           />
-          <Grid>
+          <Grid centered>
             <Grid.Row>
               {!currentUser.coinbaseUser && (
-                <Grid.Column mobile={16} tablet={6} computer={4}>
+                <Grid.Column
+                  mobile={16}
+                  tablet={items.length > 0 ? 6 : 8}
+                  computer={items.length > 0 ? 4 : 8}
+                >
                   <Route
                     path='/portefeuille'
                     component={() => (

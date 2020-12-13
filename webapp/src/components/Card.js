@@ -13,6 +13,7 @@ import contextUser from '../context/contextUser';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import { toast } from 'react-toastify';
 
 function CardWallet() {
   let totalSpend = 0;
@@ -29,11 +30,13 @@ function CardWallet() {
 
   const { currentUser } = useContext(contextUser);
 
+  const Greet = () => <div>Erreur lors de la récupération des données</div>;
+
   const getGeneralData = async () => {
-    const data = await fetch(`/api/user/${currentUser.id}/info`);
-    await data.json().then((res) => {
-      if (res.data.length > 0) {
-        res.data.map((info) => {
+    try {
+      const { data } = await axios.get(`/api/user/${currentUser.id}/info`);
+      if (data.data.length > 0) {
+        data.data.map((info) => {
           setTotal(Number(info.total_invest).toFixed(2));
           setFees(Number(info.total_fees).toFixed(2));
           setTotalWithFees(
@@ -45,86 +48,35 @@ function CardWallet() {
       } else {
         setNoData(true);
       }
-    });
-  };
-
-  const getWalletValue = async () => {
-    const data = await axios.get('/api/walletValue');
-    console.log(data.data);
-    if (data.data.noData) {
-      setNoData(true);
-      setLoading(false);
-    } else {
-      setDifferenceValue(data.data.differenceValue);
-      setPercent(data.data.percent);
-      setWalletValue(walletValue);
+    } catch (error) {
+      toast.error(<Greet />);
       setLoading(false);
     }
   };
 
-  // const getTotalValueWallet = async (id) => {
-  //   const orderItems = [];
-  //   const listItems = [];
-  //   const totalAmountByCoin = [];
-  //   const total = [];
-  //   const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  //   const purchases = await fetch(`/api/purchases/${id}/list`);
-  //   purchases.json().then((res) => {
-  //     if (res.purchases.length > 0) {
-  //       res.purchases.map((item) => {
-  //         if (listItems.indexOf(item.coin_name) === -1) {
-  //           const coin = {
-  //             name: item.coin_name,
-  //             purchases: [],
-  //           };
-  //           orderItems.push(coin);
-  //           listItems.push(item.coin_name);
-  //         }
-  //         orderItems.map((purchase) => {
-  //           if (purchase.name === item.coin_name) {
-  //             purchase.purchases.push(item);
-  //           }
-  //         });
-  //       });
-  //     }
-  //     if (orderItems.length > 0) {
-  //       orderItems.map((item) => {
-  //         const amount = item.purchases.reduce(function (res, item) {
-  //           return res + parseFloat(item.amount_coin);
-  //         }, 0);
-  //         totalAmountByCoin.push({ name: item.name, amount: amount });
-  //       });
-
-  //       const getTotalValue = totalAmountByCoin.map(async (item) => {
-  //         const value = await fetch(`/api/value/${item.name}`, {
-  //           headers: { 'Content-Type': 'application/json' },
-  //           method: 'GET',
-  //         });
-  //         return await value.json().then((res) => {
-  //           total.push(res.response * item.amount);
-  //         });
-  //       });
-
-  //       Promise.all(getTotalValue).then(() => {
-  //         setWalletValue(total.reduce(reducer));
-  //         const calculPercent =
-  //           ((total.reduce(reducer) - totalSpend) / totalSpend) * 100;
-  //         setPercent(Number(calculPercent).toFixed(2));
-  //         setDifferenceValue((total.reduce(reducer) - totalSpend).toFixed(2));
-  //         setLoading(false);
-  //       });
-  //     } else {
-  //       setNoData(true);
-  //       setLoading(false);
-  //     }
-  //   });
-  // };
+  const getWalletValue = async () => {
+    const { data } = await axios.get('/api/walletValue');
+    if (data.noData) {
+      setNoData(true);
+      setLoading(false);
+    } else if (data.walletValue) {
+      setDifferenceValue(data.differenceValue);
+      setPercent(data.percent);
+      setWalletValue(data.walletValue);
+      setLoading(false);
+    } else {
+      toast.error(<Greet />);
+      setLoading(false);
+    }
+  };
 
   const numberWithSpaces = (value) => {
-    var parts = value.toString().split('.');
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    parts[1] = parts[1].slice(0, 2);
-    return parts.join('.');
+    if (value) {
+      var parts = value.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      parts[1] = parts[1].slice(0, 2);
+      return parts.join('.');
+    }
   };
 
   //coinbase
@@ -135,49 +87,51 @@ function CardWallet() {
     if (coinbaseToken) {
       const walletTransactions = [];
       const prices = [];
-      const wallets = await axios.get(
-        `/api/coinbase/wallets/${coinbaseToken?.access_token}`
-      );
-      if (!wallets.data) {
-        setNoData(true);
-        setLoading(false);
-      } else {
-        wallets.data.map(async (wallet) => {
-          const transactions = await axios.get(
-            `/api/coinbase/transactions/${coinbaseToken?.access_token}/${wallet.id}`
-          );
-          transactions.data.map((transaction) => {
-            transaction.type !== 'buy' &&
-              transaction.status === 'completed' &&
-              walletTransactions.push({
-                amount: transaction.amount.amount,
-                sum: transaction.native_amount.amount,
-                crypto: wallet.balance.currency,
-                fee: transaction.fee ? transaction.fee : 0,
-              });
+      try {
+        const wallets = await axios.get(
+          `/api/coinbase/wallets/${coinbaseToken?.access_token}`
+        );
+        if (!wallets.data) {
+          setNoData(true);
+          setLoading(false);
+        } else {
+          wallets.data.map(async (wallet) => {
+            const transactions = await axios.get(
+              `/api/coinbase/transactions/${coinbaseToken?.access_token}/${wallet.id}`
+            );
+            transactions.data.map((transaction) => {
+              transaction.type !== 'buy' &&
+                transaction.status === 'completed' &&
+                walletTransactions.push({
+                  amount: transaction.amount.amount,
+                  sum: transaction.native_amount.amount,
+                  crypto: wallet.balance.currency,
+                  fee: transaction.fee ? transaction.fee : 0,
+                });
+            });
+            const buys = await axios.get(
+              `/api/coinbase/buys/${coinbaseToken?.access_token}/${wallet.id}`
+            );
+            buys.data.map((buy) => {
+              buy.status === 'completed' &&
+                walletTransactions.push({
+                  fee: buy.fee.amount,
+                  sum: buy.total.amount,
+                  amount: buy.amount.amount,
+                  crypto: wallet.balance.currency,
+                });
+            });
+            const price = await axios.get(
+              `/api/coinbase/price/${coinbaseToken.access_token}/${wallet.balance.currency}-EUR`
+            );
+            prices.push({
+              amount: price.data.amount,
+              currency: wallet.balance.currency,
+            });
+            getCoinbaseTotalValueWallet(walletTransactions, prices);
           });
-          const buys = await axios.get(
-            `/api/coinbase/buys/${coinbaseToken?.access_token}/${wallet.id}`
-          );
-          buys.data.map((buy) => {
-            buy.status === 'completed' &&
-              walletTransactions.push({
-                fee: buy.fee.amount,
-                sum: buy.total.amount,
-                amount: buy.amount.amount,
-                crypto: wallet.balance.currency,
-              });
-          });
-          const price = await axios.get(
-            `/api/coinbase/price/${coinbaseToken.access_token}/${wallet.balance.currency}-EUR`
-          );
-          prices.push({
-            amount: price.data.amount,
-            currency: wallet.balance.currency,
-          });
-          getCoinbaseTotalValueWallet(walletTransactions, prices);
-        });
-      }
+        }
+      } catch (error) {}
     }
   };
 
@@ -255,38 +209,43 @@ function CardWallet() {
       <Card.Content>
         {!loading && !noData ? (
           <Grid stackable columns={3} divided>
-            <Grid.Row>
-              <Grid.Column>
-                Solde portefeuille:{' '}
-                <h2 style={{ marginTop: '5px' }}>
-                  {walletValue && numberWithSpaces(walletValue)} €
-                </h2>
-              </Grid.Column>
-              <Grid.Column>
-                {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille: %
-                <Header
-                  style={{ marginTop: '5px' }}
-                  as='h2'
-                  color={percent > 0 ? 'green' : 'red'}
-                >
-                  {percent > 0 && '+'}
-                  {percent} %
-                </Header>
-              </Grid.Column>
-              <Grid.Column>
-                {differenceValue > 0 ? 'Plus-value' : ' Moins-value'}{' '}
-                portefeuille: €
-                <Header
-                  style={{ marginTop: '5px' }}
-                  as='h2'
-                  color={differenceValue > 0 ? 'green' : 'red'}
-                >
-                  {differenceValue > 0 && '+'}{' '}
-                  {numberWithSpaces(differenceValue)} €
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-            {!mobileScreen && <Divider></Divider>}
+            {walletValue && percent && differenceValue && (
+              <Grid.Row>
+                <Grid.Column>
+                  Solde portefeuille:{' '}
+                  <h2 style={{ marginTop: '5px' }}>
+                    {walletValue && numberWithSpaces(walletValue)} €
+                  </h2>
+                </Grid.Column>
+                <Grid.Column>
+                  {percent > 0 ? 'Plus-value' : ' Moins-value'} portefeuille: %
+                  <Header
+                    style={{ marginTop: '5px' }}
+                    as='h2'
+                    color={percent > 0 ? 'green' : 'red'}
+                  >
+                    {percent > 0 && '+'}
+                    {percent} %
+                  </Header>
+                </Grid.Column>
+                <Grid.Column>
+                  {differenceValue > 0 ? 'Plus-value' : ' Moins-value'}{' '}
+                  portefeuille: €
+                  <Header
+                    style={{ marginTop: '5px' }}
+                    as='h2'
+                    color={differenceValue > 0 ? 'green' : 'red'}
+                  >
+                    {differenceValue > 0 && '+'}{' '}
+                    {numberWithSpaces(differenceValue)} €
+                  </Header>
+                </Grid.Column>
+              </Grid.Row>
+            )}
+            {!mobileScreen && walletValue && percent && differenceValue && (
+              <Divider></Divider>
+            )}
+
             <Grid.Row>
               <Grid.Column>
                 Fonds investis:{' '}
