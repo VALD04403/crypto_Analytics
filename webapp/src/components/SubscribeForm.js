@@ -23,27 +23,26 @@ const SubscribeForm = ({ onUserSignedIn }) => {
   const submit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const username = formData.get('username');
     const firstname = formData.get('firstname');
     const name = formData.get('name');
     const mail = formData.get('mail');
     const password = formData.get('password');
-    const url = '/api/createUser';
+    const createUrl = '/api/createUser';
+    const sessionUrl = '/api/sessions';
     setPassword(formData.get('password'));
     if (password.length > 7) {
-      const response = await axios.post(url, {
-        username,
+      const response = await axios.post(createUrl, {
         firstname,
         name,
         mail,
         password,
       });
-      if (response.ok) {
-        const login = await axios('/api/sessions', {
-          username,
+      if (response.status === 201) {
+        const login = await axios.post(sessionUrl, {
+          mail,
           password,
         });
-        if (login.ok) {
+        if (login.status === 201) {
           onUserSignedIn();
           history.push('/accueil');
         }
@@ -72,11 +71,6 @@ const SubscribeForm = ({ onUserSignedIn }) => {
             </Header.Content>
           </Header>
           <Form onSubmit={submit}>
-            <Form.Field
-              name='username'
-              placeholder="Nom d'utilisateur"
-              control={Input}
-            ></Form.Field>
             <Form.Field
               name='firstname'
               placeholder='Prénom'

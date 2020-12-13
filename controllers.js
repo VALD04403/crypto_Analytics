@@ -1,4 +1,5 @@
 const dataAccess = require('./data-access');
+const service = require('./service.js');
 
 //crypto
 const getPurchases = async (req, res) => {
@@ -65,6 +66,12 @@ const getGeneralInfo = async (req, res) => {
   return res.status(200).json({ data });
 };
 
+const getWalletValue = async (req, res) => {
+  const { id } = req.user;
+  const value = await service.getTotalValueWallet(id);
+  return res.status(200).json(value);
+};
+
 const getLast5Purchase = async (req, res) => {
   const { userId } = req.params;
   const top5 = await dataAccess.getLast5Purchase(userId);
@@ -109,29 +116,28 @@ const getCleanPassword = (password) => {
 
 const createUser = async (req, res) => {
   try {
-    const { username, firstname, name, mail } = req.body;
+    const { firstname, name, mail } = req.body;
     const password = getCleanPassword(req.body.password);
     const response = await dataAccess.createUser(
-      username,
       firstname,
       name,
       mail,
       password
     );
     await dataAccess.insertDataSoldInfo(response.id);
+    return res.sendStatus(201);
   } catch (error) {
     if (error.isUnknown) {
       return res.sendStatus(500);
     }
     return res.status(400).send({ errorMessage: error.message });
   }
-  return res.sendStatus(201);
 };
 
 const createSession = async (req, res) => {
   let userId;
-  const { username, password } = req.body;
-  userId = await dataAccess.getVerifiedUserId(username, password);
+  const { mail, password } = req.body;
+  userId = await dataAccess.getVerifiedUserId(mail, password);
   if (userId) {
     const sessionId = await dataAccess.createSession(userId);
     res.cookie('sessionId', sessionId, {
@@ -208,6 +214,7 @@ module.exports = {
   deletePurchase,
   getValueCoin,
   getGeneralInfo,
+  getWalletValue,
   getLast5Purchase,
   getTopListValue,
   getNewsArticles,

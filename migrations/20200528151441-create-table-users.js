@@ -17,7 +17,6 @@ exports.setup = function (options, seedLink) {
 exports.up = function (db) {
   return db.runSql(`CREATE TABLE users(
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    username TEXT UNIQUE NOT NULL,
     lastname TEXT NOT NULL,
     firstname TEXT NOT NULL,
     mail TEXT UNIQUE NOT NULL,

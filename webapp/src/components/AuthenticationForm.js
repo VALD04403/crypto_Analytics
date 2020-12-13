@@ -19,7 +19,7 @@ import contextUser from '../context/contextUser';
 
 const AuthenticationForm = ({ onUserSignedIn }) => {
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
-  const [username, setUsername] = useState('');
+  const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const { setCurrentUser } = useContext(contextUser);
 
@@ -28,9 +28,9 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
   const redirectUrl = process.env.REACT_APP_REDIRECT_URL;
   const url = `https://www.coinbase.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUrl}&callback&scope=wallet:accounts:read,wallet:transactions:read,wallet:buys:read`;
 
-  function handleChangeUsername(e) {
+  function handleChangeMail(e) {
     setDisplayErrorMessage(false);
-    setUsername(e.target.value);
+    setMail(e.target.value);
   }
   function handleChangePassword(e) {
     setDisplayErrorMessage(false);
@@ -45,7 +45,7 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
     setDisplayErrorMessage(false);
     const url = '/api/sessions';
     const response = await axios.post(url, {
-      username,
+      mail,
       password,
     });
     if (response.status === 201) {
@@ -147,9 +147,9 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
           </Header>
           <Form id='auth-form' onSubmit={submit}>
             <Form.Field
-              onChange={handleChangeUsername}
-              name='username'
-              placeholder="Nom d'utilisateur"
+              onChange={handleChangeMail}
+              name='mail'
+              placeholder='Email'
               control={Input}
             ></Form.Field>
             <Form.Field
@@ -165,7 +165,7 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
               </Message>
             )}
             <ButtonPrimary
-              disabled={username.length === 0 || password.length < 8}
+              disabled={mail.length === 0 || password.length < 8}
               type='submit'
             >
               Se connecter

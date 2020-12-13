@@ -48,63 +48,77 @@ function CardWallet() {
     });
   };
 
-  const getTotalValueWallet = async (id) => {
-    const orderItems = [];
-    const listItems = [];
-    const totalAmountByCoin = [];
-    const total = [];
-    const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    const purchases = await fetch(`/api/purchases/${id}/list`);
-    purchases.json().then((res) => {
-      if (res.purchases.length > 0) {
-        res.purchases.map((item) => {
-          if (listItems.indexOf(item.coin_name) === -1) {
-            const coin = {
-              name: item.coin_name,
-              purchases: [],
-            };
-            orderItems.push(coin);
-            listItems.push(item.coin_name);
-          }
-          orderItems.map((purchase) => {
-            if (purchase.name === item.coin_name) {
-              purchase.purchases.push(item);
-            }
-          });
-        });
-      }
-      if (orderItems.length > 0) {
-        orderItems.map((item) => {
-          const amount = item.purchases.reduce(function (res, item) {
-            return res + parseFloat(item.amount_coin);
-          }, 0);
-          totalAmountByCoin.push({ name: item.name, amount: amount });
-        });
-
-        const getTotalValue = totalAmountByCoin.map(async (item) => {
-          const value = await fetch(`/api/value/${item.name}`, {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'GET',
-          });
-          return await value.json().then((res) => {
-            total.push(res.response * item.amount);
-          });
-        });
-
-        Promise.all(getTotalValue).then(() => {
-          setWalletValue(total.reduce(reducer));
-          const calculPercent =
-            ((total.reduce(reducer) - totalSpend) / totalSpend) * 100;
-          setPercent(Number(calculPercent).toFixed(2));
-          setDifferenceValue((total.reduce(reducer) - totalSpend).toFixed(2));
-          setLoading(false);
-        });
-      } else {
-        setNoData(true);
-        setLoading(false);
-      }
-    });
+  const getWalletValue = async () => {
+    const data = await axios.get('/api/walletValue');
+    console.log(data.data);
+    if (data.data.noData) {
+      setNoData(true);
+      setLoading(false);
+    } else {
+      setDifferenceValue(data.data.differenceValue);
+      setPercent(data.data.percent);
+      setWalletValue(walletValue);
+      setLoading(false);
+    }
   };
+
+  // const getTotalValueWallet = async (id) => {
+  //   const orderItems = [];
+  //   const listItems = [];
+  //   const totalAmountByCoin = [];
+  //   const total = [];
+  //   const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  //   const purchases = await fetch(`/api/purchases/${id}/list`);
+  //   purchases.json().then((res) => {
+  //     if (res.purchases.length > 0) {
+  //       res.purchases.map((item) => {
+  //         if (listItems.indexOf(item.coin_name) === -1) {
+  //           const coin = {
+  //             name: item.coin_name,
+  //             purchases: [],
+  //           };
+  //           orderItems.push(coin);
+  //           listItems.push(item.coin_name);
+  //         }
+  //         orderItems.map((purchase) => {
+  //           if (purchase.name === item.coin_name) {
+  //             purchase.purchases.push(item);
+  //           }
+  //         });
+  //       });
+  //     }
+  //     if (orderItems.length > 0) {
+  //       orderItems.map((item) => {
+  //         const amount = item.purchases.reduce(function (res, item) {
+  //           return res + parseFloat(item.amount_coin);
+  //         }, 0);
+  //         totalAmountByCoin.push({ name: item.name, amount: amount });
+  //       });
+
+  //       const getTotalValue = totalAmountByCoin.map(async (item) => {
+  //         const value = await fetch(`/api/value/${item.name}`, {
+  //           headers: { 'Content-Type': 'application/json' },
+  //           method: 'GET',
+  //         });
+  //         return await value.json().then((res) => {
+  //           total.push(res.response * item.amount);
+  //         });
+  //       });
+
+  //       Promise.all(getTotalValue).then(() => {
+  //         setWalletValue(total.reduce(reducer));
+  //         const calculPercent =
+  //           ((total.reduce(reducer) - totalSpend) / totalSpend) * 100;
+  //         setPercent(Number(calculPercent).toFixed(2));
+  //         setDifferenceValue((total.reduce(reducer) - totalSpend).toFixed(2));
+  //         setLoading(false);
+  //       });
+  //     } else {
+  //       setNoData(true);
+  //       setLoading(false);
+  //     }
+  //   });
+  // };
 
   const numberWithSpaces = (value) => {
     var parts = value.toString().split('.');
@@ -225,8 +239,9 @@ function CardWallet() {
     }
     window.addEventListener('resize', handleResize);
     window.scrollTo(0, 0);
+
     !currentUser.coinbaseUser ? getGeneralData() : getCoinbaseInfo();
-    !currentUser.coinbaseUser && getTotalValueWallet(currentUser.id);
+    !currentUser.coinbaseUser && getWalletValue();
   }, []);
 
   return (
@@ -296,16 +311,17 @@ function CardWallet() {
             <p style={{ marginTop: '15px' }}>
               Vous n'avez pas encore ajoutez de transactions.
             </p>
-            {!currentUser.coinbaseUser && (
-              <Button
-                style={{ marginTop: '15px', marginBottom: '10px' }}
-                as={Link}
-                to='/portefeuille'
-                basic
-              >
-                Ajouter ma première tansaction
-              </Button>
-            )}
+            {!currentUser.coinbaseUser ||
+              (window.location.pathname !== '/accueil' && (
+                <Button
+                  style={{ marginTop: '15px', marginBottom: '10px' }}
+                  as={Link}
+                  to='/portefeuille'
+                  basic
+                >
+                  Ajouter ma première tansaction
+                </Button>
+              ))}
           </Fragment>
         )}
         {loading && (

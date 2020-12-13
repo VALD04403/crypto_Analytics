@@ -114,26 +114,27 @@ getAllAmountWallet = async () => {
 
 // user
 
-const createUser = async (username, firstname, name, mail, password) => {
+const createUser = async (firstname, name, mail, password) => {
   try {
     const user = await pool.query(
-      `INSERT INTO users (username, firstname, lastname, mail, password) VALUES ($1, $2,$3, crypt($4, gen_salt('bf')), crypt($5, gen_salt('bf'))) RETURNING id`,
-      [username, firstname, name, mail, password]
+      `INSERT INTO users (firstname, lastname, mail, password) VALUES ($1, $2, crypt($3, gen_salt('bf')), crypt($4, gen_salt('bf'))) RETURNING id`,
+      [firstname, name, mail, password]
     );
     return user.rows[0];
   } catch (error) {
+    console.log(error);
     // Postgres UNIQUE VIOLATION
     if (error.code === '23505') {
-      throw new Error('Username is already taken.');
+      throw new Error('email is already taken.');
     }
     throw new UnknownError();
   }
 };
 
-const getVerifiedUserId = async (username, password) => {
+const getVerifiedUserId = async (mail, password) => {
   const result = await pool.query(
-    'SELECT id FROM users WHERE username = $1 AND password = crypt($2, password)',
-    [username, password]
+    'SELECT id FROM users WHERE mail = crypt($1, mail) AND password = crypt($2, password)',
+    [mail, password]
   );
   return result.rows[0] ? result.rows[0].id : null;
 };
@@ -153,7 +154,7 @@ const deleteSession = async (sessionId) => {
 const getUserFromSessionId = async (sessionId) => {
   const result = await pool.query(
     `
-    SELECT users.id AS id, username FROM users
+    SELECT users.id AS id, firstname, lastname FROM users
       JOIN session
       ON session.user_id = users.id
     WHERE session.session_id = $1

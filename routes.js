@@ -28,6 +28,7 @@ router.use(allowAuthenticatedUserOnly);
 router.use('/purchases/:userId', routesPurchases);
 router.use('/user/:userId', routesUser);
 
+router.get('/walletValue', controllers.getWalletValue);
 router.get('/value/:coin', controllers.getValueCoin);
 router.get('/listValue', controllers.getTopListValue);
 
