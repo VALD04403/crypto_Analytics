@@ -270,8 +270,8 @@ function CardWallet() {
             <p style={{ marginTop: '15px' }}>
               Vous n'avez pas encore ajoutez de transactions.
             </p>
-            {!currentUser.coinbaseUser ||
-              (window.location.pathname !== '/accueil' && (
+            {!currentUser.coinbaseUser &&
+              window.location.pathname === '/accueil' && (
                 <Button
                   style={{ marginTop: '15px', marginBottom: '10px' }}
                   as={Link}
@@ -280,7 +280,7 @@ function CardWallet() {
                 >
                   Ajouter ma première tansaction
                 </Button>
-              ))}
+              )}
           </Fragment>
         )}
         {loading && (
