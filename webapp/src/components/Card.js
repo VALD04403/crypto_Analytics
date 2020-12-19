@@ -255,7 +255,9 @@ function CardWallet() {
               </Grid.Column>
               <Grid.Column>
                 Frais:{' '}
-                <h2 style={{ marginTop: '5px' }}>{numberWithSpaces(fees)} €</h2>
+                <h2 style={{ marginTop: '5px' }}>
+                  {fees > 0 ? numberWithSpaces(fees) : fees} €
+                </h2>
               </Grid.Column>
               <Grid.Column>
                 Fonds investis avec frais:{' '}
