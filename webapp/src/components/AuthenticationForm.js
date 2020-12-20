@@ -134,7 +134,7 @@ const AuthenticationForm = ({ onUserSignedIn }) => {
   return (
     <Container>
       <Image
-        style={{ width: '90px', paddingTop: '10em', paddingBottom: '2em' }}
+        style={{ width: '90px', paddingTop: '5em', paddingBottom: '2em' }}
         centered
         src={logo}
       />

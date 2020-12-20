@@ -15,7 +15,7 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import { toast } from 'react-toastify';
 
-function CardWallet() {
+function CardWallet(props) {
   let totalSpend = 0;
   const [walletValue, setWalletValue] = useState();
   const [percent, setPercent] = useState();
@@ -54,21 +54,22 @@ function CardWallet() {
     }
   };
 
-  const getWalletValue = async () => {
-    const { data } = await axios.get('/api/walletValue');
-    if (data.noData) {
-      setNoData(true);
-      setLoading(false);
-    } else if (data.walletValue) {
-      setDifferenceValue(data.differenceValue);
-      setPercent(data.percent);
-      setWalletValue(data.walletValue);
-      setLoading(false);
-    } else {
-      toast.error(<Greet />);
-      setLoading(false);
-    }
-  };
+  // const getWalletValue = async () => {
+  //   const { data } = await axios.get('/api/walletValue');
+  //   if (data.noData) {
+  //     setNoData(true);
+  //     setLoading(false);
+  //   } else if (data.walletValue) {
+  //     setDifferenceValue(data.differenceValue);
+  //     setPercent(data.percent);
+  //     setWalletValue(data.walletValue);
+  //     setLoading(false);
+  //   } else {
+  //     // toast.error(<Greet />);
+  //     setNoData(true);
+  //     setLoading(false);
+  //   }
+  // };
 
   const numberWithSpaces = (value) => {
     if (value) {
@@ -187,6 +188,19 @@ function CardWallet() {
   };
 
   useEffect(() => {
+    if (props.walletData?.noData) {
+      setNoData(true);
+      setLoading(false);
+    } else if (props.walletData?.walletValue) {
+      setDifferenceValue(props.walletData.differenceValue);
+      setPercent(props.walletData.percent);
+      setWalletValue(props.walletData.walletValue);
+      setLoading(false);
+    } else {
+      // toast.error(<Greet />);
+      setLoading(false);
+    }
+
     windowResize();
     function handleResize() {
       windowResize();
@@ -195,7 +209,7 @@ function CardWallet() {
     window.scrollTo(0, 0);
 
     !currentUser.coinbaseUser ? getGeneralData() : getCoinbaseInfo();
-    !currentUser.coinbaseUser && getWalletValue();
+    // !currentUser.coinbaseUser && getWalletValue();
   }, []);
 
   return (

@@ -18,6 +18,7 @@ import { Grid } from 'semantic-ui-react';
 function Dashboard() {
   const [items, setItems] = useState([]);
   const [articles, setArticles] = useState();
+  const [walletData, setWalletData] = useState();
 
   const orderItems = [];
   const articleItems = [];
@@ -26,16 +27,27 @@ function Dashboard() {
   const { currentUser } = useContext(contextUser);
 
   useEffect(() => {
-    history.location.pathname === '/accueil' && getNewsArticles();
+    if (history.location.pathname === '/accueil') {
+      getNewsArticles();
+      getWalletData();
+    }
     if (history.location.pathname === '/portefeuille') {
-      !currentUser.coinbaseUser
-        ? getPurchases(currentUser.id)
-        : getCoinbaseTransactions(currentUser.id);
+      if (!currentUser.coinbaseUser) {
+        getPurchases(currentUser.id);
+        getWalletData();
+      } else {
+        getCoinbaseTransactions(currentUser.id);
+      }
     } else if (history.location.pathname === '/') {
       history.push('/accueil');
     }
     window.scrollTo(0, 0);
   }, []);
+
+  const getWalletData = async () => {
+    const { data } = await axios.get('/api/walletValue');
+    setWalletData(data);
+  };
 
   const getPurchases = async (id) => {
     const response = await axios.get(`/api/purchases/${id}/list`);
@@ -73,8 +85,14 @@ function Dashboard() {
         <div id='wrapper' style={{ marginTop: '90px', paddingBottom: '30px' }}>
           <Navbar />
           <ToastContainer position='top-center' />
-          <Route path='/accueil' component={() => <CardWallet />} />
-          <Route path='/portefeuille' component={() => <CardWallet />} />
+          <Route
+            path='/accueil'
+            component={() => <CardWallet walletData={walletData} />}
+          />
+          <Route
+            path='/portefeuille'
+            component={() => <CardWallet walletData={walletData} />}
+          />
           <Route path='/accueil' component={() => <LastAction />} />
           <Route
             path='/accueil'
@@ -98,6 +116,7 @@ function Dashboard() {
                       <FormAddAction
                         onSubmitForm={() => {
                           getPurchases(currentUser.id);
+                          getWalletData();
                         }}
                       />
                     )}

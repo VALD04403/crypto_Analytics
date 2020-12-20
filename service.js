@@ -42,7 +42,7 @@ const getTotalValueWallet = async (id) => {
 
     const getTotalValue = totalAmountByCoin.map(async (item) => {
       const value = await dataAccess.getValueCrypto(item.name);
-      return total.push(value * item.amount);
+      total.push(value * item.amount);
     });
 
     Promise.all(getTotalValue).then(() => {
@@ -54,10 +54,10 @@ const getTotalValueWallet = async (id) => {
         differenceValue: (total.reduce(reducer) - totalSpend).toFixed(2),
       };
     });
+    return returnData;
   } else {
     return { noData: true };
   }
-  return returnData;
 };
 
 module.exports = {
